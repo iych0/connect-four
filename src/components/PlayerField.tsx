@@ -1,0 +1,22 @@
+import type {Player} from "../types.ts";
+import type {ChangeEvent} from "react";
+
+const PlayerField = ({player, nameSetter}: {player: Player, nameSetter(name: string, id: number): void}) => {
+    const setName = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        console.log(player);
+        nameSetter(e.currentTarget.value, player.id);
+    }
+
+    return (
+        <div className='flex flex-col items-center gap-16'>
+            <input type='text'
+                   placeholder='Игрок'
+                   className='transition-all text-3xl duration-100 hover:bg-ctp-surface1 focus:bg-ctp-surface1 border-b-2 border-ctp-lavender opacity-50 max-w-64'
+                   onChange={setName}/>
+            <div className={`rounded-full bg-ctp-${player.color} w-48 h-48`}></div>
+        </div>
+    )
+}
+
+export default PlayerField;

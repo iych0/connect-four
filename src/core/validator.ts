@@ -1,6 +1,6 @@
 import {type Dot, GameState} from "../types.ts";
 
-// реализация функции со сложностью o(1)
+// реализация функции со сложностью o(1)?
 export const validate = (field: Dot[], lastDot: Dot | undefined): typeof GameState[keyof typeof GameState] => {
     if (!field || !lastDot) return GameState.IN_PROGRESS;
 
@@ -16,9 +16,6 @@ export const validate = (field: Dot[], lastDot: Dot | undefined): typeof GameSta
     }
 
     console.log('first')
-
-    const col = lastDot.id % 7;
-    const row = Math.floor(lastDot.id / 7);
 
     // проверка по колонке
     const [columnStart, columnEnd] = [lastDot.id - (lastDot.id % 6), lastDot.id - (lastDot.id % 6) + 5];
@@ -48,12 +45,11 @@ export const validate = (field: Dot[], lastDot: Dot | undefined): typeof GameSta
     const mainDiagonalResult = checkLine(fromLeftDiagonal, lastDot);
     if (mainDiagonalResult != GameState.IN_PROGRESS) return mainDiagonalResult;
 
-     console.log('fourth')
+    console.log('fourth')
 
     // проверка по диагонали (справа налево)
     const fromRightDiagonal = Array.from({ length: Math.floor((41 - lastDot.id) / 7) }, (_, index) =>
         field[lastDot.id + (7 * index)]);
-     console.log(fromRightDiagonal)
     const secondaryDiagonalResult = checkLine(fromRightDiagonal, lastDot);
     if (secondaryDiagonalResult != GameState.IN_PROGRESS) return secondaryDiagonalResult;
 

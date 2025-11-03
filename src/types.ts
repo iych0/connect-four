@@ -12,6 +12,13 @@ export type Dot = {
     color: string;
 }
 
+export type GameContextType = Player & {
+    gameState: typeof GameState[keyof typeof GameState],
+    changePlayer(): void,
+    updateItems(id: number): Dot[],
+    updateLastDot(dot: Dot): void
+};
+
 // le enums (линтер жалуется на enum)
 export const GameState = {
     IN_PROGRESS: "IN_PROGRESS",
