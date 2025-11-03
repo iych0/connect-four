@@ -2,6 +2,7 @@ import {type ChangeEvent, type Dispatch, type SetStateAction, useRef, useState} 
 
 type Player = {
     id: number;
+    defaultName: string;
     name?: string;
     color: string;
 }
@@ -15,10 +16,10 @@ const GameField = () => {
     const fieldHeight = 6;
     const fieldWidth = 7;
 
-    const [firstPlayer, setFirstPlayer] = useState<Player>({id: 1, name: '', color: 'red'});
-    const [secondPlayer, setSecondPlayer] = useState<Player>({id: 2, name: '', color: 'blue'});
+    const [firstPlayer, setFirstPlayer] = useState<Player>({id: 1, defaultName: 'первый игрок', name: '', color: 'red'});
+    const [secondPlayer, setSecondPlayer] = useState<Player>({id: 2, defaultName: 'второй игрок', name: '', color: 'blue'});
 
-    const [currentPlayerId, setCurrentPlayerId] = useState<number>(1);
+    const [currentPlayer, setCurrentPlayer] = useState<Player>(firstPlayer);
 
     const items= useRef<number[]>(
         Array.from({ length: fieldWidth * fieldHeight }, (_, i) => i)
@@ -39,8 +40,8 @@ const GameField = () => {
             </div>
             <div className='text-3xl transform transition-all duration-200'>
                 <span>Сейчас ходит </span>
-                <span className={`text-ctp-${currentPlayerId == 1? firstPlayer.color : secondPlayer.color}`}>
-                    {currentPlayerId == 1 ? firstPlayer.name || "первый игрок" : secondPlayer.name || "второй игрок"}
+                <span className={`text-ctp-${currentPlayer.color}`}>
+                    {currentPlayer.name ?? currentPlayer.defaultName}
                 </span>
             </div>
         </div>
