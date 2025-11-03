@@ -6,6 +6,7 @@ export type Player = {
 }
 
 export type Dot = {
+    id: number;
     ownerId? : number;
     color: string;
 }
