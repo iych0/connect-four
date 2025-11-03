@@ -1,4 +1,5 @@
 module.exports = {
+    darkMode: 'false',
     purge: {
         content: ['./src/**/*.html'],
         safelist: [
@@ -10,6 +11,7 @@ module.exports = {
             'text-ctp-mauve',
             'text-ctp-lavender',
 
+            'bg-ctp-base',
             'bg-ctp-red',
             'bg-ctp-blue',
             'bg-ctp-green',

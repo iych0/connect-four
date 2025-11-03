@@ -7,13 +7,15 @@ const GameField = () => {
     const fieldHeight = 6;
     const fieldWidth = 7;
 
+    const [debugMsg, setDebugMsg] = useState<string | undefined>(undefined);
+
     const [players, setPlayers] = useState<Player[]>([
         {id: 0, defaultName: "первый игрок", name: undefined, color: "red"},
         {id: 1, defaultName: "второй игрок", name: undefined, color: "blue"},
     ]);
 
     const [lastDot, setLastDot] = useState<Dot>();
-    const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(1);
+    const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
 
     const [items, setItems] = useState<Dot[]>(
         Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"}))
@@ -44,7 +46,9 @@ const GameField = () => {
     }
 
     useEffect(() => {
-        console.log(validate(items, lastDot))
+        const validateMsg = validate(items, lastDot)
+        setDebugMsg(validateMsg)
+        console.log("validateMsg: ", validateMsg)
     }, [items, lastDot]);
 
     return (
@@ -68,6 +72,8 @@ const GameField = () => {
                     </span>
                 </div>
             </div>
+            <div>
+                {debugMsg? "Валидатор высрал " + debugMsg : "Тут будут статусы валидатора"}</div>
         </GameContext>
     );
 };
