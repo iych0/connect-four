@@ -1,4 +1,4 @@
-import {type ChangeEvent, type Dispatch, type SetStateAction, useCallback, useContext, useState} from 'react';
+import {type ChangeEvent, useCallback, useContext, useState} from 'react';
 import type {Dot, Player} from "../types.ts";
 import {GameContext} from "./GameContext.ts";
 
@@ -11,29 +11,37 @@ const GameField = () => {
         {id: 1, defaultName: "второй игрок", name: undefined, color: "blue"},
     ]);
 
-    const [currentPlayer, setCurrentPlayer] = useState<Player>(players[0]);
+    const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(1);
 
     const [items, setItems] = useState<Dot[]>(
         Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"}))
     );
 
+    const updatePlayerName = (name: string, id: number): void => {
+        setPlayers((prevState) =>
+            prevState.map((player, i) =>
+                i === id ? { ...player, name } : player
+            )
+        );
+    };
+
     const changePlayer = useCallback(() => {
-        setCurrentPlayer(players[(currentPlayer.id + 1) % 2]);
-    }, [currentPlayer.id, players])
+        setCurrentPlayerIndex((currentPlayerIndex + 1) % 2);
+    }, [currentPlayerIndex])
 
     const updateItems = useCallback((id: number) => {
         const newItems = items.map((item, i) =>
-            i === id ? { ...item, id: item.id, ownerId: currentPlayer.id, color: currentPlayer.color } : item
+            i === id ? { ...item, id: item.id, ownerId: currentPlayerIndex, color: players[currentPlayerIndex].color } : item
         );
         setItems(newItems);
         return newItems.slice(id - (id % 6), id - (id % 6) + 6);
-    }, [currentPlayer.color, currentPlayer.id, items]);
+    }, [currentPlayerIndex, items, players]);
 
     return (
-        <GameContext value={{...currentPlayer, changePlayer, updateItems}}>
+        <GameContext value={{...players[currentPlayerIndex], changePlayer, updateItems}}>
             <div className='flex flex-col items-center gap-8 w-full'>
                 <div className='flex px-10 justify-between w-full'>
-                    <PlayerField player={players[0]} nameSetter={setCurrentPlayer}/>
+                    <PlayerField player={players[0]} nameSetter={updatePlayerName}/>
                     <div className='w-[48rem] h-[38rem] border-ctp-lavender rounded-b-2xl border-2 border-t-0'>
                         <div className='flex flex-row justify-around h-full w-full max-w-full'>
                             {Array(fieldWidth).fill(0).map((_, i) => (
@@ -41,12 +49,12 @@ const GameField = () => {
                             ))}
                         </div>
                     </div>
-                    <PlayerField player={players[1]} nameSetter={setCurrentPlayer}/>
+                    <PlayerField player={players[1]} nameSetter={updatePlayerName}/>
                 </div>
                 <div className='text-3xl transform transition-all duration-200'>
                     <span>Сейчас ходит </span>
-                    <span className={`text-ctp-${currentPlayer.color}`}>
-                        {currentPlayer.name || currentPlayer.defaultName}
+                    <span className={`text-ctp-${players[currentPlayerIndex].color}`}>
+                        {players[currentPlayerIndex].name || players[currentPlayerIndex].defaultName}
                     </span>
                 </div>
             </div>
@@ -54,11 +62,11 @@ const GameField = () => {
     );
 };
 
-const PlayerField = ({player, nameSetter}: {player: Player, nameSetter: Dispatch<SetStateAction<Player>>}) => {
+const PlayerField = ({player, nameSetter}: {player: Player, nameSetter(name: string, id: number): void}) => {
     const setName = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         console.log(player);
-        nameSetter(prevState => ({...prevState, name: e.target.value}));
+        nameSetter(e.currentTarget.value, player.id);
     }
 
     return (
