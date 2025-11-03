@@ -73,7 +73,7 @@ const GameField = () => {
                 </div>
             </div>
             <div>
-                {debugMsg? "Валидатор высрал " + debugMsg : "Тут будут статусы валидатора"}</div>
+                {debugMsg? "Валидатор выдал " + debugMsg : "Тут будут статусы валидатора"}</div>
         </GameContext>
     );
 };
