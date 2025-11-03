@@ -13,6 +13,9 @@ module.exports = {
             'bg-ctp-red',
             'bg-ctp-blue',
             'bg-ctp-green',
+            'bg-ctp-surface',
+            'bg-ctp-surface1',
+            'bg-ctp-surface2',
 
             'border-ctp-red',
             'border-ctp-blue',
