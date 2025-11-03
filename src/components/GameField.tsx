@@ -22,10 +22,12 @@ const GameField = () => {
     }, [currentPlayer.id, players])
 
     const updateItems = useCallback((id: number) => {
-        setItems(prev => prev.map((item, i) =>
-            i === id ? { id: item.id, ownerId: currentPlayer.id, color: currentPlayer.color } : item
-        ));
-    }, [currentPlayer.color, currentPlayer.id]);
+        const newItems = items.map((item, i) =>
+            i === id ? { ...item, id: item.id, ownerId: currentPlayer.id, color: currentPlayer.color } : item
+        );
+        setItems(newItems);
+        return newItems.slice(id - (id % 6), id - (id % 6) + 6);
+    }, [currentPlayer.color, currentPlayer.id, items]);
 
     return (
         <GameContext value={{...currentPlayer, changePlayer, updateItems}}>
@@ -76,13 +78,13 @@ const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
     const changePlayerCallback = useContext(GameContext).changePlayer;
     const updateItemsCallback = useContext(GameContext).updateItems;
 
-    const updateNextFreeDotIndex = () => {
+    const updateNextFreeDotIndex = (items: Dot[]) => {
         // самая "верхняя" занятая точка (первая, у которой определено поле ownerId)
         const closestCapturedDot = items.findIndex(e => e.ownerId != undefined);
 
         // вхождений не найдено - значит все точки свободны и следует взять последнюю, иначе взять точку над ближайшей занятой
+        if (closestCapturedDot == 0) return;
         setNextFreeDotIndex(closestCapturedDot == -1 ? items.length - 1 : closestCapturedDot - 1);
-        console.log(closestCapturedDot)
     }
 
     const clearHover = () => {
@@ -90,14 +92,15 @@ const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
     }
     
     const captureDot = () => {
-        updateItemsCallback(items[nextFreeDotIndex].id);
-        changePlayerCallback()
-        clearHover()
-        updateNextFreeDotIndex()
+        if (!items[nextFreeDotIndex]) return;
+        const newState= updateItemsCallback(items[nextFreeDotIndex].id);
+        changePlayerCallback();
+        clearHover();
+        updateNextFreeDotIndex(newState);
     }
 
     return (
-        <div className='flex w-full flex-col group' onMouseEnter={updateNextFreeDotIndex} onMouseLeave={clearHover} onClick={captureDot}>
+        <div className='flex w-full flex-col group' onMouseEnter={() => updateNextFreeDotIndex(items)} onMouseLeave={clearHover} onClick={captureDot}>
             <div className='bg-linear-to-t from-ctp-surface2 to-ctp-base rounded-t-xl opacity-0 transition-opacity duration-50 group-hover:opacity-100 h-[50%]' />
             {items.map((item, index) => (
                 <div key={index}

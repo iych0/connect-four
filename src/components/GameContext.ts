@@ -1,7 +1,7 @@
 import {createContext} from "react";
-import type {Player} from "../types.ts";
+import type {Dot, Player} from "../types.ts";
 
-type GameContextType = Player & { changePlayer(): void, updateItems(id: number): void};
+type GameContextType = Player & { changePlayer(): void, updateItems(id: number): Dot[]};
 
 export const GameContext = createContext<GameContextType>({
     id: 0,
@@ -9,5 +9,5 @@ export const GameContext = createContext<GameContextType>({
     name: undefined,
     color: "blue",
     changePlayer() {},
-    updateItems(id: number) {},
+    updateItems(id: number) {return []},
 });
