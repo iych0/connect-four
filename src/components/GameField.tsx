@@ -1,6 +1,7 @@
-import {type ChangeEvent, useCallback, useContext, useState} from 'react';
+import {type ChangeEvent, useCallback, useContext, useEffect, useState} from 'react';
 import type {Dot, Player} from "../types.ts";
-import {GameContext} from "./GameContext.ts";
+import {GameContext} from "../core/GameContext.ts";
+import {validate} from "../core/validator.ts";
 
 const GameField = () => {
     const fieldHeight = 6;
@@ -11,6 +12,7 @@ const GameField = () => {
         {id: 1, defaultName: "второй игрок", name: undefined, color: "blue"},
     ]);
 
+    const [lastDot, setLastDot] = useState<Dot>();
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(1);
 
     const [items, setItems] = useState<Dot[]>(
@@ -37,8 +39,16 @@ const GameField = () => {
         return newItems.slice(id - (id % 6), id - (id % 6) + 6);
     }, [currentPlayerIndex, items, players]);
 
+    const updateLastDot = (dot: Dot) => {
+        setLastDot(dot);
+    }
+
+    useEffect(() => {
+        console.log(validate(items, lastDot))
+    }, [items, lastDot]);
+
     return (
-        <GameContext value={{...players[currentPlayerIndex], changePlayer, updateItems}}>
+        <GameContext value={{...players[currentPlayerIndex], changePlayer, updateItems, updateLastDot}}>
             <div className='flex flex-col items-center gap-8 w-full'>
                 <div className='flex px-10 justify-between w-full'>
                     <PlayerField player={players[0]} nameSetter={updatePlayerName}/>
@@ -83,8 +93,7 @@ const PlayerField = ({player, nameSetter}: {player: Player, nameSetter(name: str
 const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
     // этот индекс нужен для определения точки, куда можно повесить hover эффект (предпросмотр места, куда упадет фишка при нажатии)
     const [nextFreeDotIndex, setNextFreeDotIndex] = useState(items.length);
-    const changePlayerCallback = useContext(GameContext).changePlayer;
-    const updateItemsCallback = useContext(GameContext).updateItems;
+    const callbacks = useContext(GameContext);
 
     const updateNextFreeDotIndex = (items: Dot[]) => {
         // самая "верхняя" занятая точка (первая, у которой определено поле ownerId)
@@ -98,13 +107,15 @@ const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
     const clearHover = () => {
         setNextFreeDotIndex(items.length);
     }
-    
+
+    // менять порядок вызовов очень опасно
     const captureDot = () => {
         if (!items[nextFreeDotIndex]) return;
-        const newState= updateItemsCallback(items[nextFreeDotIndex].id);
-        changePlayerCallback();
+        const newState= callbacks.updateItems(items[nextFreeDotIndex].id);
+        callbacks.changePlayer();
         clearHover();
         updateNextFreeDotIndex(newState);
+        callbacks.updateLastDot(newState[nextFreeDotIndex]);
     }
 
     return (
@@ -124,7 +135,7 @@ const GameFieldDot = ({dot, isHovered}: {dot: Dot, isHovered: boolean}) => {
     const currentPlayerColor = useContext(GameContext).color;
     return (
         <div className={`flex items-center justify-center bg-ctp-${isHovered ? currentPlayerColor + " opacity-50" : dot.color} rounded-full w-16 h-16`}>
-            d
+            {dot.id}
         </div>
     )
 }
