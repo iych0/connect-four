@@ -1,59 +1,72 @@
-import {useCallback, useState} from 'react';
-import {type Dot, GameState, type Player} from "../types.ts";
 import {GameContext} from "../core/GameContext.ts";
 import GameFieldColumn from "./GameFieldColumn.tsx";
 import PlayerField from "./PlayerField.tsx";
 import GameFieldStatusBar from "./GameFieldStatusBar.tsx";
+import {useGameLogic} from "../core/hooks.ts";
 
 const GameField = () => {
-    const fieldHeight = 6;
-    const fieldWidth = 7;
 
-    const [players, setPlayers] = useState<Player[]>([
-        {id: 0, defaultName: "первый игрок", name: undefined, color: "red"},
-        {id: 1, defaultName: "второй игрок", name: undefined, color: "blue"},
-    ]);
-    const [items, setItems] = useState<Dot[]>(
-        Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"}))
-    );
-    const [gameState, setGameState] = useState<typeof GameState[keyof typeof GameState]>("IN_PROGRESS")
-    const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
+    const { players,
+            items,
+            gameState,
+            currentPlayer,
+            fieldHeight,
+            fieldWidth,
+            updateItems,
+            changePlayer,
+            updatePlayerName,
+            restartGame,
+            updateState,
+        } = useGameLogic();
 
-    const updatePlayerName = (name: string, id: number): void => {
-        setPlayers((prevState) =>
-            prevState.map((player, i) =>
-                i === id ? { ...player, name } : player
-            )
-        );
-    };
-
-
-    // game context callbacks
-    const changePlayer = useCallback(() => {
-        setCurrentPlayerIndex((currentPlayerIndex + 1) % 2);
-    }, [currentPlayerIndex])
-
-    const updateItems = useCallback((id: number) => {
-        const newItems = items.map((item, i) =>
-            i === id ? { ...item, id: item.id, ownerId: currentPlayerIndex, color: players[currentPlayerIndex].color } : item
-        );
-        setItems(newItems);
-        return newItems;
-    }, [currentPlayerIndex, items, players]);
-
-    const updateState = (state: typeof GameState[keyof typeof GameState]) => {
-        setGameState(state)
-    }
-
-    const restartGame = () => {
-        setItems(Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"})));
-        setGameState("IN_PROGRESS");
-        setCurrentPlayerIndex(0);
-    }
+    // const fieldHeight = 6;
+    // const fieldWidth = 7;
+    //
+    // const [players, setPlayers] = useState<Player[]>([
+    //     {id: 0, defaultName: "первый игрок", name: undefined, color: "red"},
+    //     {id: 1, defaultName: "второй игрок", name: undefined, color: "blue"},
+    // ]);
+    // const [items, setItems] = useState<Dot[]>(
+    //     Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"}))
+    // );
+    // const [gameState, setGameState] = useState<typeof GameState[keyof typeof GameState]>("IN_PROGRESS")
+    // const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
+    //
+    // const updatePlayerName = (name: string, id: number): void => {
+    //     setPlayers((prevState) =>
+    //         prevState.map((player, i) =>
+    //             i === id ? { ...player, name } : player
+    //         )
+    //     );
+    // };
+    //
+    //
+    // // game context callbacks
+    // const changePlayer = useCallback(() => {
+    //     setCurrentPlayerIndex((currentPlayerIndex + 1) % 2);
+    // }, [currentPlayerIndex])
+    //
+    // const updateItems = useCallback((id: number) => {
+    //     const newItems = items.map((item, i) =>
+    //         i === id ? { ...item, id: item.id, ownerId: currentPlayerIndex, color: players[currentPlayerIndex].color } : item
+    //     );
+    //     setItems(newItems);
+    //     return newItems;
+    // }, [currentPlayerIndex, items, players]);
+    //
+    // const updateState = (state: typeof GameState[keyof typeof GameState]) => {
+    //     setGameState(state)
+    // }
+    //
+    // const restartGame = () => {
+    //     setItems(Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"})));
+    //     setGameState("IN_PROGRESS");
+    //     setCurrentPlayerIndex(0);
+    // }
 
 
     return (
-        <GameContext value={{...players[currentPlayerIndex],
+        <GameContext value={{...currentPlayer,
             gameField: items,
             gameState,
             changePlayer,
@@ -73,7 +86,7 @@ const GameField = () => {
                     </div>
                     <PlayerField player={players[1]} nameSetter={updatePlayerName}/>
                 </div>
-                <GameFieldStatusBar player={players[currentPlayerIndex]} />
+                <GameFieldStatusBar player={currentPlayer} />
             </div>
 
         </GameContext>
