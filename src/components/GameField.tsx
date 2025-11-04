@@ -17,7 +17,6 @@ const GameField = () => {
         Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"}))
     );
     const [gameState, setGameState] = useState<typeof GameState[keyof typeof GameState]>("IN_PROGRESS")
-    const [lastDot, setLastDot] = useState<Dot>();
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
 
     const updatePlayerName = (name: string, id: number): void => {
@@ -42,10 +41,6 @@ const GameField = () => {
         return newItems;
     }, [currentPlayerIndex, items, players]);
 
-    const updateLastDot = (dot: Dot) => {
-        setLastDot(dot);
-    }
-
     const updateState = (state: typeof GameState[keyof typeof GameState]) => {
         setGameState(state)
     }
@@ -63,7 +58,6 @@ const GameField = () => {
             gameState,
             changePlayer,
             updateItems,
-            updateLastDot,
             updateState,
             restartGame}}>
 

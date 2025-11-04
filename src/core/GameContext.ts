@@ -11,7 +11,6 @@ export const GameContext = createContext<GameContextType>({
     gameField: [],
     changePlayer() {},
     updateItems(id: number) {return []},
-    updateLastDot(dot: Dot) {},
     updateState(status: typeof GameState[keyof typeof GameState]) {},
     restartGame() {}
 });

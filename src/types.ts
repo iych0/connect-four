@@ -17,7 +17,6 @@ export type GameContextType = Player & {
     gameState: typeof GameState[keyof typeof GameState],
     changePlayer(): void,
     updateItems(id: number): Dot[],
-    updateLastDot(dot: Dot): void,
     updateState(status: typeof GameState[keyof typeof GameState]): void,
 
     restartGame(): void

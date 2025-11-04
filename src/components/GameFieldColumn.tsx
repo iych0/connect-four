@@ -37,7 +37,6 @@ const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
         gameContext.changePlayer();
         clearHover();
         updateNextFreeDotIndex(newState.slice(nextFreeDotId - (nextFreeDotId % 6), nextFreeDotId - (nextFreeDotId % 6) + 6));
-        gameContext.updateLastDot(newState[nextFreeDotIndex]);
     }
 
     return (
