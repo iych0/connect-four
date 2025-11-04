@@ -1,7 +1,8 @@
 import {useContext, useState} from "react";
 import {GameContext} from "../core/GameContext.ts";
-import type {Dot} from "../types.ts";
+import {type Dot} from "../types.ts";
 import GameFieldDot from "./GameFieldDot.tsx";
+import {validate} from "../core/validator.ts";
 
 const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
     // этот индекс нужен для определения точки, куда можно повесить hover эффект (предпросмотр места, куда упадет фишка при нажатии)
@@ -23,12 +24,19 @@ const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
 
     // менять порядок вызовов очень опасно
     const captureDot = () => {
-        console.log("game state from column: ", gameContext.gameState);
-        if (!items[nextFreeDotIndex] && gameContext.gameState != "IN_PROGRESS") return;
-        const newState= gameContext.updateItems(items[nextFreeDotIndex].id);
+        if (!items[nextFreeDotIndex] || gameContext.gameState != "IN_PROGRESS") return;
+        const nextFreeDotId = items[nextFreeDotIndex].id
+        const newState= gameContext.updateItems(nextFreeDotId);
+        const newGameState = validate(newState, newState[nextFreeDotId]);
+        console.log(newGameState);
+        if (newGameState != "IN_PROGRESS") {
+            clearHover();
+            gameContext.updateState(newGameState);
+            return;
+        }
         gameContext.changePlayer();
         clearHover();
-        updateNextFreeDotIndex(newState);
+        updateNextFreeDotIndex(newState.slice(nextFreeDotId - (nextFreeDotId % 6), nextFreeDotId - (nextFreeDotId % 6) + 6));
         gameContext.updateLastDot(newState[nextFreeDotIndex]);
     }
 
@@ -38,7 +46,7 @@ const GameFieldColumn = ({items}: {items: Array<Dot>}) => {
             {items.map((item, index) => (
                 <div key={index}
                      className={`flex justify-center items-center transition-colors duration-50 h-full w-full group-hover:bg-ctp-surface2 ${index % 6 == 5 ? "rounded-b-xl" : ""}`}>
-                    <GameFieldDot dot={item} isHovered={index == nextFreeDotIndex}/>
+                    <GameFieldDot dot={item} isHovered={gameContext.gameState == "IN_PROGRESS" && index == nextFreeDotIndex}/>
                 </div>
             ))}
         </div>

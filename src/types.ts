@@ -13,10 +13,12 @@ export type Dot = {
 }
 
 export type GameContextType = Player & {
+    gameField: Dot[],
     gameState: typeof GameState[keyof typeof GameState],
     changePlayer(): void,
     updateItems(id: number): Dot[],
-    updateLastDot(dot: Dot): void
+    updateLastDot(dot: Dot): void,
+    updateState(status: typeof GameState[keyof typeof GameState]): void,
 };
 
 // le enums (линтер жалуется на enum)

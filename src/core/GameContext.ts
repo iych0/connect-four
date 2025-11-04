@@ -1,5 +1,5 @@
 import {createContext} from "react";
-import type {Dot, GameContextType} from "../types.ts";
+import {type Dot, type GameContextType, GameState} from "../types.ts";
 
 
 export const GameContext = createContext<GameContextType>({
@@ -8,7 +8,9 @@ export const GameContext = createContext<GameContextType>({
     defaultName: "первый игрок",
     name: undefined,
     color: "blue",
+    gameField: [],
     changePlayer() {},
     updateItems(id: number) {return []},
-    updateLastDot(dot: Dot) {}
+    updateLastDot(dot: Dot) {},
+    updateState(status: typeof GameState[keyof typeof GameState]) {}
 });
