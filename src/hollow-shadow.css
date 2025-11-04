@@ -1,0 +1,9 @@
+@layer utilities {
+    .hollow-shadow-red {
+        box-shadow: 0 0 30px 10px var(--catppuccin-color-red);
+    }
+
+    .hollow-shadow-blue {
+        box-shadow: 0 0 30px 10px var(--catppuccin-color-blue);
+    }
+}

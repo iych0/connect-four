@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# Connect Four
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Классическая игра **Connect Four**
 
-Currently, two official plugins are available:
+Цель игры — первым выстроить четыре своих фишки по горизонтали, вертикали или диагонали на игровом поле 7×6.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Установка и запуск
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Простой вариант
+Просто перейдите [по ссылке](https://iycho.online).
 
-## Expanding the ESLint configuration
+### Ручная сборка
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+#### Предварительные требования
+- [Node.js](https://nodejs.org/) (рекомендуется v18+)
+- [Yarn](https://yarnpkg.com/) (v1 или v4)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Шаги
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. **Клонируйте репозиторий**
+   ```bash
+   git clone https://github.com/your-username/connect-four.git
+   cd connect-four 
+   ```
+2. **Установите зависимости**
+   ```bash
+   yarn
+   ```
+3. **Запустите проект локально**
+   ```bash
+   yarn dev
+   ```
+   
+## Примечание для проверяющих
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+В коде игры реализованы две функции validator - одна из них оптимизирована под игру, вторая отвечает требованиям, указанным во втором пункте тестового задания.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Первую можно найти в файле [validator.ts](src/core/validator.ts), вторую в файле [fieldValidator.ts](src/core/fieldValidator.ts)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+**Прошу обратить внимание на комментарии, указанные в коде второй функции**
