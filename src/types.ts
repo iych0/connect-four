@@ -19,7 +19,10 @@ export type GameContextType = Player & {
     updateItems(id: number): Dot[],
     updateLastDot(dot: Dot): void,
     updateState(status: typeof GameState[keyof typeof GameState]): void,
+
+    restartGame(): void
 };
+
 
 // le enums (линтер жалуется на enum)
 export const GameState = {

@@ -28,6 +28,8 @@ const GameField = () => {
         );
     };
 
+
+    // game context callbacks
     const changePlayer = useCallback(() => {
         setCurrentPlayerIndex((currentPlayerIndex + 1) % 2);
     }, [currentPlayerIndex])
@@ -48,9 +50,22 @@ const GameField = () => {
         setGameState(state)
     }
 
+    const restartGame = () => {
+        setItems(Array.from({ length: fieldWidth * fieldHeight }, (_, i) => ({id: i, ownerId: undefined, color: "surface1"})));
+        setGameState("IN_PROGRESS");
+        setCurrentPlayerIndex(0);
+    }
+
 
     return (
-        <GameContext value={{...players[currentPlayerIndex], gameField: items, gameState, changePlayer, updateItems, updateLastDot, updateState}}>
+        <GameContext value={{...players[currentPlayerIndex],
+            gameField: items,
+            gameState,
+            changePlayer,
+            updateItems,
+            updateLastDot,
+            updateState,
+            restartGame}}>
 
             <div className='flex flex-col items-center gap-8 w-full'>
                 <div className='flex px-10 justify-between w-full'>
