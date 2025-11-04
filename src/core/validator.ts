@@ -1,6 +1,5 @@
 import {type Dot, GameState} from "../types.ts";
 
-// реализация функции со сложностью o(1)?
 export const validate = (field: Dot[], lastDot: Dot | undefined): typeof GameState[keyof typeof GameState] => {
     if (!field || !lastDot) return GameState.IN_PROGRESS;
 
@@ -50,6 +49,5 @@ const checkLine = (line: Dot[], lastDot: Dot)=> {
         counter = dot.ownerId == lastDot.ownerId? counter + 1 : 0;
         if (counter == 4) return lastDot.ownerId == 0 ? GameState.FIRST_PLAYER_WIN : GameState.SECOND_PLAYER_WIN;
     }
-
     return GameState.IN_PROGRESS;
 }

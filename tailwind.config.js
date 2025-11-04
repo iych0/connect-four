@@ -21,6 +21,9 @@ module.exports = {
 
             'border-ctp-red',
             'border-ctp-blue',
+
+            'hollow-shadow-red',
+            'hollow-shadow-blue',
         ]
     },
 }
