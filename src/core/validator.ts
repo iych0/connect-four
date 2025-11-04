@@ -11,12 +11,11 @@ export const validate = (field: Dot[], lastDot: Dot | undefined): typeof GameSta
     if (lastDot.id % 6 == 0){
         const topRow = Array.from({ length: 7 }, (_, index) =>
             field[index * 6]);
-        console.log(topRow);
-        return topRow.filter((i) => i.ownerId != undefined).length == 7 ? GameState.DRAW : GameState.IN_PROGRESS;
+        if (topRow.filter((i) => i.ownerId != undefined).length == 7) return GameState.DRAW;
     }
 
     // проверка по колонке
-    const [columnStart, columnEnd] = [lastDot.id - (lastDot.id % 6), lastDot.id - (lastDot.id % 6) + 5];
+    const columnEnd =  lastDot.id - (lastDot.id % 6) + 5;
     if (columnEnd - lastDot.id >= 3 && field
         .slice(lastDot.id, lastDot.id + 4)
         .filter((i) => i.ownerId === lastDot.ownerId)

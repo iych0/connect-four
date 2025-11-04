@@ -5,9 +5,9 @@ const FIELD_HEIGHT = 6;
 const FIELD_WIDTH = 7;
 
 export const useGameLogic = () => {
-    const [players] = useState<Player[]>([
-        { id: 0, defaultName: "первый игрок", name: undefined, color: "red" },
-        { id: 1, defaultName: "второй игрок", name: undefined, color: "blue" },
+    const [players, setPlayers] = useState<Player[]>([
+        { id: 0, defaultName: "первый игрок", name: undefined, color: "red", winsCount: 0},
+        { id: 1, defaultName: "второй игрок", name: undefined, color: "blue", winsCount: 0},
     ]);
 
     const [items, setItems] = useState<Dot[]>(
@@ -18,6 +18,7 @@ export const useGameLogic = () => {
         }))
     );
 
+    const [gameSeed, setGameSeed] = useState<number>(1);
     const [gameState, setGameState] = useState<typeof GameState[keyof typeof GameState]>("IN_PROGRESS");
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -36,9 +37,13 @@ export const useGameLogic = () => {
         return newItems;
     }, [currentPlayerIndex, items, players]);
 
-    const updatePlayerName = useCallback((name: string, id: number) => {
-        players[id].name = name;
-    }, [players]);
+    const updatePlayer = useCallback((id: number, delta: Partial<Player>) => {
+        setPlayers(prev => prev.map(player =>
+            player.id === id
+                ? { ...player, ...delta}
+                : player
+        ));
+    }, []);
 
     const updateState = useCallback((newState: typeof GameState[keyof typeof GameState]) => {
         setGameState(newState);
@@ -46,6 +51,7 @@ export const useGameLogic = () => {
 
     const restartGame = useCallback(() => {
         console.log("restarting");
+        setGameSeed(Math.random())
         setItems(
             Array.from({ length: FIELD_WIDTH * FIELD_HEIGHT }, (_, i) => ({
                 id: i,
@@ -58,16 +64,18 @@ export const useGameLogic = () => {
     }, []);
 
     return {
+        gameSeed,
         players,
         items,
         gameState,
         currentPlayer,
         fieldHeight: FIELD_HEIGHT,
         fieldWidth: FIELD_WIDTH,
+        currentPlayerIndex,
 
         updateItems,
         changePlayer,
-        updatePlayerName,
+        updatePlayer,
         updateState,
         restartGame,
     };

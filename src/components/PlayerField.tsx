@@ -1,11 +1,10 @@
 import type {Player} from "../types.ts";
 import type {ChangeEvent} from "react";
 
-const PlayerField = ({player, nameSetter}: {player: Player, nameSetter(name: string, id: number): void}) => {
+const PlayerField = ({player, nameSetter}: {player: Player, nameSetter(id: number, delta: Partial<Player>): void}) => {
     const setName = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        console.log(player);
-        nameSetter(e.currentTarget.value, player.id);
+        nameSetter(player.id, {name: e.currentTarget.value});
     }
 
     return (

@@ -4,6 +4,7 @@ export type Player = {
     defaultName: string;
     name?: string;
     color: string;
+    winsCount: number;
 }
 
 export type Dot = {
@@ -12,11 +13,18 @@ export type Dot = {
     color: string;
 }
 
-export type GameContextType = Player & {
+export type GameContextType = {
+    gameSeed: number;
+    players: Player[],
     gameField: Dot[],
     gameState: typeof GameState[keyof typeof GameState],
+    fieldHeight: number,
+    fieldWidth: number,
+    currentPlayerIndex: number,
+
     changePlayer(): void,
     updateItems(id: number): Dot[],
+    updatePlayer(id: number, delta: Partial<Player>): void,
     updateState(status: typeof GameState[keyof typeof GameState]): void,
 
     restartGame(): void
