@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import {type Dot, type Player, GameState } from "../types";
+import {type Dot, type Player, GameState } from "../types.ts";
 
 const FIELD_HEIGHT = 6;
 const FIELD_WIDTH = 7;
@@ -38,13 +38,14 @@ export const useGameLogic = () => {
 
     const updatePlayerName = useCallback((name: string, id: number) => {
         players[id].name = name;
-    }, []);
+    }, [players]);
 
     const updateState = useCallback((newState: typeof GameState[keyof typeof GameState]) => {
         setGameState(newState);
     }, []);
 
     const restartGame = useCallback(() => {
+        console.log("restarting");
         setItems(
             Array.from({ length: FIELD_WIDTH * FIELD_HEIGHT }, (_, i) => ({
                 id: i,
