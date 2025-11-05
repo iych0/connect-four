@@ -49,12 +49,28 @@ export interface IGameStore {
     restartGame(): void
 }
 
+export interface IColumnStore {
+    items: Dot[];
+    isHovered: boolean;
+    setHovered: (hovered: boolean) => void;
+    handleClick: (
+        globalField: Dot[],
+        players: Player[],
+        currentPlayerIndex: number,
+        updateGlobalField: (field: Dot[]) => void,
+        changePlayer: () => void,
+        updatePlayer: (id: number, delta: Partial<Player>) => void,
+        updateState: (state: GameState) => void
+    ) => void;
+}
+
 
 // enums
-const GameStateEnum = {
+export const GameState = {
     IN_PROGRESS: "IN_PROGRESS",
     FIRST_PLAYER_WIN: "FIRST_PLAYER_WIN",
     SECOND_PLAYER_WIN: "SECOND_PLAYER_WIN",
-    DRAW: "DRAW"
+    DRAW: "DRAW",
 } as const;
-export type GameState = typeof GameStateEnum[keyof typeof GameStateEnum];
+
+export type GameState = typeof GameState[keyof typeof GameState];

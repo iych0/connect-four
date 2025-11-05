@@ -1,6 +1,6 @@
 import {type Dot, GameState} from "../types.ts";
 
-export const validate = (field: Dot[], lastDot: Dot | undefined): typeof GameState[keyof typeof GameState] => {
+export const validate = (field: Dot[], lastDot: Dot | undefined): GameState => {
     if (!field || !lastDot) return GameState.IN_PROGRESS;
 
     // очевидно, что неплохо было бы реализовать проверку на ничью в случаях помимо переполнения поля, но это пока что

@@ -1,11 +1,13 @@
-import {useContext} from "react";
-import {GameContext} from "../core/GameContext.ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import Refresh from "../assets/refresh.svg?react"
+import {useGameStore} from "../store/gameStore.ts";
 
 const Header = () => {
-    const { players, restartGame } = useContext(GameContext);
+    const { players, restartGame } = useGameStore((state) => ({
+        players: state.players,
+        restartGame: state.restartGame,
+    }))
 
     return (
         <div className='flex flex-row justify-between w-full px-6 items-center'>

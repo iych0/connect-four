@@ -20,3 +20,4 @@ export const getEmptyGameField = (length: number) => {
         color: "surface1",
     }))
 }
+

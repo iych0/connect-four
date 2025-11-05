@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type {Dot, GameState, IGameStore} from "../types.ts";
 import {getEmptyGameField, updateGameField, updatePlayer} from "../core/GameLogic.ts";
 
-const useGameStore = create<IGameStore>()((set, get) => ({
+export const useGameStore = create<IGameStore>()((set, get) => ({
     gameSeed: 1,
     players: [
         { id: 0, defaultName: "первый игрок", name: undefined, color: "red", winsCount: 0},
