@@ -18,11 +18,3 @@ type GameHistory = {
 }
 
 //
-const vaildateByLog = (log: Array<number>) => {
-    const gameData: GameHistory = {};
-
-    for (let column of log) {
-
-    }
-
-}

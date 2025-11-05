@@ -2,14 +2,11 @@ import {type ChangeEvent} from "react";
 import {useGameStore} from "../store/gameStore.ts";
 
 const PlayerField = ({playerIndex} : {playerIndex: number}) => {
-    const { currentPlayerIndex, updatePlayer, fieldOwner } = useGameStore((state) => ({
-        currentPlayerIndex: state.currentPlayerIndex,
-        updatePlayer: state.updatePlayer,
-        fieldOwner: state.players[playerIndex],
-        }));
+    const { players, currentPlayerIndex, updatePlayer } = useGameStore();
+    const fieldOwner = players[playerIndex];
     const setName = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        updatePlayer(fieldOwner.id, {name: e.currentTarget.value});
+        updatePlayer(playerIndex, {name: e.currentTarget.value});
     }
 
     return (

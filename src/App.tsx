@@ -1,8 +1,6 @@
 import GameField from "./components/GameField.tsx";
 import {useEffect, useEffectEvent} from "react";
 import Header from "./components/Header.tsx";
-import {useGameLogic} from "./hooks/useGameLogic.ts";
-import {GameContext} from "./core/GameContext.ts";
 import "../hollow-shadow.css"
 
 function App() {

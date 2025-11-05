@@ -4,10 +4,7 @@ import Refresh from "../assets/refresh.svg?react"
 import {useGameStore} from "../store/gameStore.ts";
 
 const Header = () => {
-    const { players, restartGame } = useGameStore((state) => ({
-        players: state.players,
-        restartGame: state.restartGame,
-    }))
+    const { players, restartGame } = useGameStore();
 
     return (
         <div className='flex flex-row justify-between w-full px-6 items-center'>

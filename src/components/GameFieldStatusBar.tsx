@@ -1,8 +1,9 @@
-import {useContext, useMemo} from "react";
-import { GameContext } from "../core/GameContext.ts";
+import {useMemo} from "react";
+import {useGameStore} from "../store/gameStore.ts";
 
 const GameFieldStatusBar = () => {
-    const { gameState, players, currentPlayerIndex, restartGame } = useContext(GameContext);
+    const { players, currentPlayerIndex, gameState, restartGame } = useGameStore();
+
     const player = players[currentPlayerIndex];
     const animationKey = useMemo(
         () => (gameState === "IN_PROGRESS" ? "progress" : "finished"),

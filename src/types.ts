@@ -11,59 +11,38 @@ export type Dot = {
     id: number;
     ownerId? : number;
     color: string;
+    isHovered?: boolean;
 }
 
-export type GameContextType = {
-    gameSeed: number;
-    players: Player[],
-    gameField: Dot[],
-    gameState: GameState,
-    fieldHeight: number,
-    fieldWidth: number,
-    currentPlayerIndex: number,
-
-    changePlayer(): void,
-    updateItems(id: number): Dot[],
-    updatePlayer(id: number, delta: Partial<Player>): void,
-    updateState(status: GameState): void,
-
-    restartGame(): void
-};
-
+export type ColumnInfo = {
+    id: number;
+    nextFreeDot: Dot,
+    nextFreeDotColumIndex: number;
+}
 
 // interfaces
 export interface IGameStore {
     gameSeed: number;
     players: Player[],
-    gameField: Dot[],
+    currentPlayerIndex: number,
+
+    gameField: Record<number, Dot>,
     gameState: GameState,
     fieldHeight: number,
     fieldWidth: number,
-    currentPlayerIndex: number,
+    columnsInfo: ColumnInfo[],
 
     changePlayer(): void,
-    updateItems(id: number): void,
+    updateGameField(id: number): void,
     updatePlayer(id: number, delta: Partial<Player>): void,
     updateGameState(status: GameState): void,
 
     restartGame(): void
-}
 
-export interface IColumnStore {
-    items: Dot[];
-    isHovered: boolean;
-    setHovered: (hovered: boolean) => void;
-    handleClick: (
-        globalField: Dot[],
-        players: Player[],
-        currentPlayerIndex: number,
-        updateGlobalField: (field: Dot[]) => void,
-        changePlayer: () => void,
-        updatePlayer: (id: number, delta: Partial<Player>) => void,
-        updateState: (state: GameState) => void
-    ) => void;
+    handlePlayerAction(columnIndex: number): void,
+    handleMouseEnter(columnIndex: number): void,
+    handleMouseLeave(columnIndex: number): void
 }
-
 
 // enums
 export const GameState = {

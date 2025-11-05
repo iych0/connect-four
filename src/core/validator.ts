@@ -1,6 +1,6 @@
 import {type Dot, GameState} from "../types.ts";
 
-export const validate = (field: Dot[], lastDot: Dot | undefined): GameState => {
+export const validate = (field: Record<number, Dot>, lastDot: Dot | undefined): GameState => {
     if (!field || !lastDot) return GameState.IN_PROGRESS;
 
     // очевидно, что неплохо было бы реализовать проверку на ничью в случаях помимо переполнения поля, но это пока что
@@ -15,7 +15,8 @@ export const validate = (field: Dot[], lastDot: Dot | undefined): GameState => {
 
     // проверка по колонке
     const columnEnd =  lastDot.id - (lastDot.id % 6) + 5;
-    if (columnEnd - lastDot.id >= 3 && field
+    if (columnEnd - lastDot.id >= 3 && Array
+        .from({ length: 4 }, (_, index) => field[lastDot.id + index])
         .slice(lastDot.id, lastDot.id + 4)
         .filter((i) => i.ownerId === lastDot.ownerId)
         .length == 4)  {
@@ -31,11 +32,12 @@ export const validate = (field: Dot[], lastDot: Dot | undefined): GameState => {
     // проверка по дмагонали (слева направо)
     const fromLeftDiagonal = Array.from({ length: Math.floor(lastDot.id / 5) }, (_, index) =>
         field[lastDot.id - (5 * index)]);
+
     const mainDiagonalResult = checkLine(fromLeftDiagonal, lastDot);
     if (mainDiagonalResult != GameState.IN_PROGRESS) return mainDiagonalResult;
 
     // проверка по диагонали (справа налево)
-    const fromRightDiagonal = Array.from({ length: Math.floor((41 - lastDot.id) / 7) }, (_, index) =>
+    const fromRightDiagonal = Array.from({ length: (lastDot.id / 7) + 1 }, (_, index) =>
         field[lastDot.id + (7 * index)]);
     const secondaryDiagonalResult = checkLine(fromRightDiagonal, lastDot);
     if (secondaryDiagonalResult != GameState.IN_PROGRESS) return secondaryDiagonalResult;
@@ -44,6 +46,7 @@ export const validate = (field: Dot[], lastDot: Dot | undefined): GameState => {
 }
 
 const checkLine = (line: Dot[], lastDot: Dot)=> {
+
     let counter = 0;
     for (const dot of line) {
         counter = dot.ownerId == lastDot.ownerId? counter + 1 : 0;
