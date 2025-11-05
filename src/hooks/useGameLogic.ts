@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import {type Dot, type Player, GameState } from "../types.ts";
+import {type Dot, type Player, type GameState } from "../types.ts";
 
 const FIELD_HEIGHT = 6;
 const FIELD_WIDTH = 7;
@@ -19,7 +19,7 @@ export const useGameLogic = () => {
     );
 
     const [gameSeed, setGameSeed] = useState<number>(1);
-    const [gameState, setGameState] = useState<typeof GameState[keyof typeof GameState]>("IN_PROGRESS");
+    const [gameState, setGameState] = useState<GameState>("IN_PROGRESS");
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
     const currentPlayer: Player = players[currentPlayerIndex];
@@ -45,12 +45,11 @@ export const useGameLogic = () => {
         ));
     }, []);
 
-    const updateState = useCallback((newState: typeof GameState[keyof typeof GameState]) => {
+    const updateState = useCallback((newState: GameState) => {
         setGameState(newState);
     }, []);
 
     const restartGame = useCallback(() => {
-        console.log("restarting");
         setGameSeed(Math.random())
         setItems(
             Array.from({ length: FIELD_WIDTH * FIELD_HEIGHT }, (_, i) => ({
