@@ -1,10 +1,9 @@
 import { create } from 'zustand';
 import type {GameState, IGameStore} from "../types.ts";
 import {
-    getEmptyGameField,
-    getInitialField,
+    getEmptyGameField, getHoveredGameField,
+    getInitialField, getOwnedGameField,
     getUpdatedColumnsInfo,
-    getUpdatedGameField,
     getUpdatedPlayers
 } from "../core/GameLogic.ts";
 import {validate} from "../core/validator.ts";
@@ -26,8 +25,8 @@ export const useGameStore = create<IGameStore>()((set, get) => {
 
     currentPlayerIndex: 0,
     players: [
-        { id: 0, defaultName: "первый игрок", name: undefined, color: "red", winsCount: 0},
-        { id: 1, defaultName: "второй игрок", name: undefined, color: "blue", winsCount: 0},
+        { id: 0, defaultName: "первый игрок", name: undefined, color: "red", winsCount: 0 },
+        { id: 1, defaultName: "второй игрок", name: undefined, color: "blue", winsCount: 0 },
     ],
 
     gameState: 'IN_PROGRESS',
@@ -46,7 +45,7 @@ export const useGameStore = create<IGameStore>()((set, get) => {
         })),
     updateGameField: (dotIndex: number) =>
         set((state) => ({
-            gameField: getUpdatedGameField(state.gameField, dotIndex, undefined, state.players[state.currentPlayerIndex]),
+            gameField: getOwnedGameField(state.gameField, dotIndex, state.players[state.currentPlayerIndex]),
         })),
     updateGameState: (newState: GameState) =>
         set(() => ({
@@ -54,11 +53,21 @@ export const useGameStore = create<IGameStore>()((set, get) => {
         })),
     restartGame: () => {
         const { fieldWidth, fieldHeight } = get();
+        const newGameField = getEmptyGameField(fieldHeight * fieldWidth);
+        const columnsInfo = Array.from({ length: fieldWidth }, (_, i) => {
+            const bottomIndex = (i + 1) * fieldHeight - 1;
+            return {
+                id: i,
+                nextFreeDot: gameField[bottomIndex],
+                nextFreeDotColumIndex: fieldHeight - 1,
+            };
+        });
         set({
             currentPlayerIndex: 0,
             gameState: 'IN_PROGRESS',
-            gameField: getEmptyGameField(fieldHeight * fieldWidth),
+            gameField: newGameField,
             gameSeed: Math.random(),
+            columnsInfo: columnsInfo,
         })
     },
 
@@ -67,19 +76,15 @@ export const useGameStore = create<IGameStore>()((set, get) => {
         const { gameField,
             columnsInfo,
             gameState,
-            fieldWidth,
             players,
             currentPlayerIndex } = get();
         const { nextFreeDotColumIndex } = columnsInfo[columnIndex];
 
         if (nextFreeDotColumIndex < 0 || gameState != 'IN_PROGRESS') return;
 
-        console.log('sup')
-
         const nextFreeDotId = columnIndex * fieldHeight + nextFreeDotColumIndex;
         const owner = players[currentPlayerIndex];
-        const newField = getUpdatedGameField(gameField, nextFreeDotId, undefined, owner);
-        console.log(newField);
+        const newField = getOwnedGameField(gameField, nextFreeDotId, owner);
         const newGameState = validate(newField, newField[nextFreeDotId])
         if (newGameState != 'IN_PROGRESS') {
             const winnerId = newGameState == "FIRST_PLAYER_WIN" ? 0 : 1;
@@ -88,23 +93,24 @@ export const useGameStore = create<IGameStore>()((set, get) => {
                     winnerId,
                     {winsCount: state.players[winnerId].winsCount + 1}),
                 gameState: newGameState,
+                gameField: newField,
             }))
             return;
         }
 
-        const newColumnsInfo = getUpdatedColumnsInfo(columnsInfo, columnIndex, newField[nextFreeDotId])
-        console.log(newColumnsInfo[0].nextFreeDot == newField[5])
+        const newColumnsInfo = getUpdatedColumnsInfo(columnsInfo, columnIndex, newField[nextFreeDotId - 1]);
+        const fieldWithNewHover = getHoveredGameField(newField, nextFreeDotId - 1, true);
         set((state) => ({
             currentPlayerIndex: (state.currentPlayerIndex + 1) % 2,
             columnsInfo: newColumnsInfo,
-            gameField: newField,
+            gameField: fieldWithNewHover,
         }))
     },
 
     // в идеале - setDotHover
     handleMouseEnter: (columnIndex: number) => {
         set((state) => ({
-            gameField: getUpdatedGameField(
+            gameField: getHoveredGameField(
                 state.gameField,
                 state.columnsInfo[columnIndex].nextFreeDot.id,
                 true),
@@ -113,7 +119,7 @@ export const useGameStore = create<IGameStore>()((set, get) => {
 
     handleMouseLeave: (columnIndex: number) => {
         set((state) => ({
-            gameField: getUpdatedGameField(
+            gameField: getHoveredGameField(
                 state.gameField,
                 state.columnsInfo[columnIndex].nextFreeDot.id,
                 false),

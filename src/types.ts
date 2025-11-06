@@ -23,14 +23,14 @@ export type ColumnInfo = {
 // interfaces
 export interface IGameStore {
     gameSeed: number;
-    players: Player[],
+    players: Record<number, Player>,
     currentPlayerIndex: number,
 
     gameField: Record<number, Dot>,
     gameState: GameState,
     fieldHeight: number,
     fieldWidth: number,
-    columnsInfo: ColumnInfo[],
+    columnsInfo: Record<number, ColumnInfo>,
 
     changePlayer(): void,
     updateGameField(id: number): void,

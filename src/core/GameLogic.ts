@@ -7,30 +7,60 @@ export const getInitialField = (): Record<number, Dot> => {
             id: i,
             ownerId: undefined,
             color: "surface1",
+            isHovered: false,
         };
     }
     return field;
 };
 
 export const getUpdatedPlayers = (
-    players: Player[],
+    players: Record<number, Player>,
     id: number,
-    delta: Partial<Player>): Player[] => {
-    return players.map((player, index) =>
-        index === id ? {...player, ...delta} : player)
+    delta: Partial<Player>): Record<number, Player> => {
+    return {
+        ...players,
+        [id]: {...players[id], ...delta}
+    }
 };
 
-export const getUpdatedGameField = (
+// export const getUpdatedGameField = (
+//     dots: Record<number, Dot>,
+//     dotIndex: number,
+//     hoverState?: boolean,
+//     owner?: Player): Record<number, Dot> => {
+//     if (!owner) {
+//         return {...dots, [dotIndex]: {...dots[dotIndex], isHovered: hoverState}}
+//     }
+//     return {...dots,
+//         [dotIndex-1]: {...dots[dotIndex-1], isHovered: true}, [dotIndex]: {...dots[dotIndex], ownerId: owner.id, color: owner.color}}
+// }
+
+export const getOwnedGameField = (
     dots: Record<number, Dot>,
     dotIndex: number,
-    hoverState?: boolean,
-    owner?: Player): Record<number, Dot> => {
-    if (!owner) {
-        return {...dots, [dotIndex]: {...dots[dotIndex], isHovered: hoverState}}
+    owner: Player
+): Record<number, Dot> => {
+    return {
+        ...dots,
+        [dotIndex]: { ...dots[dotIndex], ownerId: owner.id, color: owner.color, isHovered: false }
+    };
+};
+
+
+export const getHoveredGameField = (
+    dots: Record<number, Dot>,
+    dotIndex: number,
+    hoverState: boolean
+): Record<number, Dot> => {
+    // duh
+    if (!dots[dotIndex]) {
+        return dots;
     }
-    return {...dots,
-        [dotIndex-1]: {...dots[dotIndex-1], isHovered: true}, [dotIndex]: {...dots[dotIndex], ownerId: owner.id, color: owner.color}}
-}
+    return {
+        ...dots,
+        [dotIndex]: { ...dots[dotIndex], isHovered: hoverState }
+    };
+};
 
 export const getEmptyGameField = (length: number): Dot[] => {
     return Array.from({ length: length}, (_, i) => ({
@@ -42,12 +72,15 @@ export const getEmptyGameField = (length: number): Dot[] => {
 
 // ffffffffff
 export const getUpdatedColumnsInfo = (
-    columns: ColumnInfo[],
+    columns: Record<number, ColumnInfo>,
     columnIndex: number,
-    newDot: Dot): ColumnInfo[] => {
-    return [
-        ...columns.slice(0, columnIndex),
-        {id: columnIndex, nextFreeDot: newDot, nextFreeDotColumIndex: columns[columnIndex].nextFreeDotColumIndex - 1},
-        ...columns.slice(columnIndex + 1)
-    ]
+    newDot: Dot): Record<number, ColumnInfo> => {
+    return {
+        ...columns,
+        [columnIndex]: {
+            id: columnIndex,
+            nextFreeDot: newDot,
+            nextFreeDotColumIndex: columns[columnIndex].nextFreeDotColumIndex - 1
+        },
+    }
 }
