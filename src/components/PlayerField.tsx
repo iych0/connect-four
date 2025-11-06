@@ -1,8 +1,15 @@
 import {type ChangeEvent} from "react";
 import {useGameStore} from "../store/gameStore.ts";
+import {useShallow} from "zustand/react/shallow";
 
 const PlayerField = ({playerIndex} : {playerIndex: number}) => {
-    const { players, currentPlayerIndex, updatePlayer } = useGameStore();
+    const { players, currentPlayerIndex, updatePlayer } = useGameStore(
+        useShallow((state) => ({
+            players: state.players,
+            currentPlayerIndex: state.currentPlayerIndex,
+            updatePlayer: state.updatePlayer,
+        }))
+    );
     const fieldOwner = players[playerIndex];
     const setName = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();

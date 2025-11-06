@@ -2,9 +2,15 @@
 // @ts-expect-error
 import Refresh from "../assets/refresh.svg?react"
 import {useGameStore} from "../store/gameStore.ts";
+import {useShallow} from "zustand/react/shallow";
 
 const Header = () => {
-    const { players, restartGame } = useGameStore();
+    const { players, restartGame } = useGameStore(
+        useShallow((state) => ({
+            players: state.players,
+            restartGame: state.restartGame,
+        }))
+    );
 
     return (
         <div className='flex flex-row justify-between w-full px-6 items-center'>

@@ -2,9 +2,15 @@ import GameFieldColumn from "./GameFieldColumn.tsx";
 import PlayerField from "./PlayerField.tsx";
 import GameFieldStatusBar from "./GameFieldStatusBar.tsx";
 import {useGameStore} from "../store/gameStore.ts";
+import {useShallow} from "zustand/react/shallow";
 
 const GameField = () => {
-    const { fieldWidth, gameSeed } = useGameStore()
+    const { fieldWidth, gameSeed } = useGameStore(
+        useShallow((state) => ({
+            fieldWidth: state.fieldWidth,
+            gameSeed: state.gameSeed,
+        }))
+    );
 
     return (
             <div className='flex flex-col items-center gap-8 w-full'>

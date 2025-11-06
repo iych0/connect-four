@@ -1,8 +1,16 @@
 import GameFieldDot from "./GameFieldDot.tsx";
 import {useGameStore} from "../store/gameStore.ts";
+import {useShallow} from "zustand/react/shallow";
 
 const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
-    const { handleMouseEnter, handleMouseLeave, handlePlayerAction, gameState } = useGameStore();
+    const { handleMouseEnter, handleMouseLeave, handlePlayerAction, gameState } = useGameStore(
+        useShallow((state) => ({
+            handleMouseEnter: state.handleMouseEnter,
+            handleMouseLeave: state.handleMouseLeave,
+            handlePlayerAction: state.handlePlayerAction,
+            gameState: state.gameState,
+        }))
+    );
     return (
         <div className='flex w-full flex-col group'
              onMouseEnter={() => handleMouseEnter(columnIndex)}

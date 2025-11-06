@@ -1,8 +1,16 @@
 import {useMemo} from "react";
 import {useGameStore} from "../store/gameStore.ts";
+import {useShallow} from "zustand/react/shallow";
 
 const GameFieldStatusBar = () => {
-    const { players, currentPlayerIndex, gameState, restartGame } = useGameStore();
+    const { players, currentPlayerIndex, gameState, restartGame } = useGameStore(
+        useShallow((state) => ({
+            players: state.players,
+            currentPlayerIndex: state.currentPlayerIndex,
+            gameState: state.gameState,
+            restartGame: state.restartGame,
+        }))
+    );
 
     const player = players[currentPlayerIndex];
     const animationKey = useMemo(
