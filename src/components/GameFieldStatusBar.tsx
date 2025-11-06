@@ -24,7 +24,7 @@ const GameFieldStatusBar = () => {
     }
 
     return (
-        <div className="flex w-full inset-0 justify-center items-center text-3xl relative h-12">
+        <div className="flex w-full inset-0 justify-center items-center text-xl md:text-3xl relative h-12">
             <div key={animationKey}
                  onClick={handleClick}
                  className={`absolute inset-0 flex flex-col justify-center items-center animate-slide-up select-none

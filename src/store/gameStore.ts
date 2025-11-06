@@ -84,7 +84,7 @@ export const useGameStore = create<IGameStore>()((set, get) => {
 
         const nextFreeDotId = columnIndex * fieldHeight + nextFreeDotColumIndex;
         const owner = players[currentPlayerIndex];
-        const newField = getOwnedGameField(gameField, nextFreeDotId, owner);
+        let newField = getOwnedGameField(gameField, nextFreeDotId, owner);
         const newGameState = validate(newField, newField[nextFreeDotId])
         if (newGameState != 'IN_PROGRESS') {
             const winnerId = newGameState == "FIRST_PLAYER_WIN" ? 0 : 1;
@@ -99,11 +99,13 @@ export const useGameStore = create<IGameStore>()((set, get) => {
         }
 
         const newColumnsInfo = getUpdatedColumnsInfo(columnsInfo, columnIndex, newField[nextFreeDotId - 1]);
-        const fieldWithNewHover = getHoveredGameField(newField, nextFreeDotId - 1, true);
+        if (nextFreeDotId % 6 != 0){
+            newField = getHoveredGameField(newField, nextFreeDotId - 1, true)
+        }
         set((state) => ({
             currentPlayerIndex: (state.currentPlayerIndex + 1) % 2,
             columnsInfo: newColumnsInfo,
-            gameField: fieldWithNewHover,
+            gameField: newField,
         }))
     },
 

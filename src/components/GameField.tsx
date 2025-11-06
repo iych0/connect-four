@@ -16,7 +16,8 @@ const GameField = () => {
             <div className='flex flex-col items-center gap-8 w-full'>
                 <div className='flex px-10 justify-between w-full'>
                     <PlayerField playerIndex={0}/>
-                    <div className={`w-[48rem] h-[38rem] border-ctp-lavender rounded-b-2xl border-2 border-t-0`}>
+                    <div className={`md:w-[48rem] md:h-[38rem] w-96 h-96
+                    border-ctp-lavender rounded-b-2xl border-2 border-t-0`}>
                         <div className='flex flex-row justify-around h-full w-full max-w-full'>
                             {Array(fieldWidth).fill(0).map((_, i) => (
                             <GameFieldColumn columnIndex={i} key={i + gameSeed} />

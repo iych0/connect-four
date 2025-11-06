@@ -23,18 +23,6 @@ export const getUpdatedPlayers = (
     }
 };
 
-// export const getUpdatedGameField = (
-//     dots: Record<number, Dot>,
-//     dotIndex: number,
-//     hoverState?: boolean,
-//     owner?: Player): Record<number, Dot> => {
-//     if (!owner) {
-//         return {...dots, [dotIndex]: {...dots[dotIndex], isHovered: hoverState}}
-//     }
-//     return {...dots,
-//         [dotIndex-1]: {...dots[dotIndex-1], isHovered: true}, [dotIndex]: {...dots[dotIndex], ownerId: owner.id, color: owner.color}}
-// }
-
 export const getOwnedGameField = (
     dots: Record<number, Dot>,
     dotIndex: number,
@@ -45,7 +33,6 @@ export const getOwnedGameField = (
         [dotIndex]: { ...dots[dotIndex], ownerId: owner.id, color: owner.color, isHovered: false }
     };
 };
-
 
 export const getHoveredGameField = (
     dots: Record<number, Dot>,
@@ -70,7 +57,6 @@ export const getEmptyGameField = (length: number): Dot[] => {
     }))
 }
 
-// ffffffffff
 export const getUpdatedColumnsInfo = (
     columns: Record<number, ColumnInfo>,
     columnIndex: number,

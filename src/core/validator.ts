@@ -33,15 +33,15 @@ export const validate = (field: Record<number, Dot>, lastDot: Dot | undefined): 
     // проверка по дмагонали (слева направо)
     const [mainDiagonalLowerLength, mainDiagonalUpperLength] = [Math.min(x, y), Math.min(7 - x, 6 - y)];
     const mainDiagonalLength = mainDiagonalUpperLength + mainDiagonalLowerLength;
-    // console.log(mainDiagonalLowerLength, mainDiagonalUpperLength);
     const mainDiagonal = Array.from({ length: mainDiagonalLength }, (_, index) =>
         field[lastDot.id + (5 * (index - mainDiagonalLowerLength))]);
-    // console.log(mainDiagonal)
     const mainDiagonalResult = checkLine(mainDiagonal, lastDot);
     if (mainDiagonalResult != GameState.IN_PROGRESS) return mainDiagonalResult;
 
     // проверка по диагонали (справа налево)
-    const [secondaryDiagonalLowerLength, secondaryDiagonalUpperLength] = [Math.min(7 - x, y), Math.min(x + 1, 6 - y)];
+    const [secondaryDiagonalLowerLength, secondaryDiagonalUpperLength] = [Math.min(6 - x, y), Math.min(x + 1, 6 - y)];
+    console.log(x)
+    console.log(secondaryDiagonalLowerLength, secondaryDiagonalUpperLength);
     const secondaryDiagonalLength = secondaryDiagonalUpperLength + secondaryDiagonalLowerLength;
     const secondaryDiagonal = Array.from({ length: secondaryDiagonalLength }, (_, index) =>
         field[lastDot.id - (7 * (index - secondaryDiagonalLowerLength))]);
