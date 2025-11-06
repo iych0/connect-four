@@ -11,30 +11,45 @@ export type Dot = {
     id: number;
     ownerId? : number;
     color: string;
+    isHovered?: boolean;
 }
 
-export type GameContextType = {
+export type ColumnInfo = {
+    id: number;
+    nextFreeDot: Dot,
+    nextFreeDotColumIndex: number;
+}
+
+// interfaces
+export interface IGameStore {
     gameSeed: number;
-    players: Player[],
-    gameField: Dot[],
-    gameState: typeof GameState[keyof typeof GameState],
-    fieldHeight: number,
-    fieldWidth: number,
+    players: Record<number, Player>,
     currentPlayerIndex: number,
 
+    gameField: Record<number, Dot>,
+    gameState: GameState,
+    fieldHeight: number,
+    fieldWidth: number,
+    columnsInfo: Record<number, ColumnInfo>,
+
     changePlayer(): void,
-    updateItems(id: number): Dot[],
+    updateGameField(id: number): void,
     updatePlayer(id: number, delta: Partial<Player>): void,
-    updateState(status: typeof GameState[keyof typeof GameState]): void,
+    updateGameState(status: GameState): void,
 
     restartGame(): void
-};
 
+    handlePlayerAction(columnIndex: number): void,
+    handleMouseEnter(columnIndex: number): void,
+    handleMouseLeave(columnIndex: number): void
+}
 
-// le enums (линтер жалуется на enum)
+// enums
 export const GameState = {
     IN_PROGRESS: "IN_PROGRESS",
     FIRST_PLAYER_WIN: "FIRST_PLAYER_WIN",
     SECOND_PLAYER_WIN: "SECOND_PLAYER_WIN",
-    DRAW: "DRAW"
+    DRAW: "DRAW",
 } as const;
+
+export type GameState = typeof GameState[keyof typeof GameState];

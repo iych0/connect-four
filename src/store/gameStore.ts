@@ -1,0 +1,128 @@
+import { create } from 'zustand';
+import type {GameState, IGameStore} from "../types.ts";
+import {
+    getEmptyGameField, getHoveredGameField,
+    getInitialField, getOwnedGameField,
+    getUpdatedColumnsInfo,
+    getUpdatedPlayers
+} from "../core/GameLogic.ts";
+import {validate} from "../core/validator.ts";
+
+export const useGameStore = create<IGameStore>()((set, get) => {
+    const fieldWidth = 7;
+    const fieldHeight = 6;
+    const gameField = getInitialField();
+    const columnsInfo = Array.from({ length: fieldWidth }, (_, i) => {
+        const bottomIndex = (i + 1) * fieldHeight - 1;
+        return {
+            id: i,
+            nextFreeDot: gameField[bottomIndex],
+            nextFreeDotColumIndex: fieldHeight - 1,
+        };
+    });
+    return {
+    gameSeed: 1,
+
+    currentPlayerIndex: 0,
+    players: [
+        { id: 0, defaultName: "первый игрок", name: undefined, color: "red", winsCount: 0 },
+        { id: 1, defaultName: "второй игрок", name: undefined, color: "blue", winsCount: 0 },
+    ],
+
+    gameState: 'IN_PROGRESS',
+    fieldWidth: fieldWidth,
+    fieldHeight: fieldHeight,
+    gameField: gameField,
+    columnsInfo: columnsInfo,
+
+    updatePlayer: (id, delta) =>
+        set((state) => ({
+            players: getUpdatedPlayers(state.players, id, delta),
+        })),
+    changePlayer: () =>
+        set((state) => ({
+            currentPlayerIndex: (state.currentPlayerIndex + 1) % 2
+        })),
+    updateGameField: (dotIndex: number) =>
+        set((state) => ({
+            gameField: getOwnedGameField(state.gameField, dotIndex, state.players[state.currentPlayerIndex]),
+        })),
+    updateGameState: (newState: GameState) =>
+        set(() => ({
+            gameState: newState,
+        })),
+    restartGame: () => {
+        const { fieldWidth, fieldHeight } = get();
+        const newGameField = getEmptyGameField(fieldHeight * fieldWidth);
+        const columnsInfo = Array.from({ length: fieldWidth }, (_, i) => {
+            const bottomIndex = (i + 1) * fieldHeight - 1;
+            return {
+                id: i,
+                nextFreeDot: gameField[bottomIndex],
+                nextFreeDotColumIndex: fieldHeight - 1,
+            };
+        });
+        set({
+            currentPlayerIndex: 0,
+            gameState: 'IN_PROGRESS',
+            gameField: newGameField,
+            gameSeed: Math.random(),
+            columnsInfo: columnsInfo,
+        })
+    },
+
+    // todo: get dat chonky boi out of store
+    handlePlayerAction: (columnIndex: number) => {
+        const { gameField,
+            columnsInfo,
+            gameState,
+            players,
+            currentPlayerIndex } = get();
+        const { nextFreeDotColumIndex } = columnsInfo[columnIndex];
+
+        if (nextFreeDotColumIndex < 0 || gameState != 'IN_PROGRESS') return;
+
+        const nextFreeDotId = columnIndex * fieldHeight + nextFreeDotColumIndex;
+        const owner = players[currentPlayerIndex];
+        const newField = getOwnedGameField(gameField, nextFreeDotId, owner);
+        const newGameState = validate(newField, newField[nextFreeDotId])
+        if (newGameState != 'IN_PROGRESS') {
+            const winnerId = newGameState == "FIRST_PLAYER_WIN" ? 0 : 1;
+            set((state) => ({
+                players: getUpdatedPlayers(state.players,
+                    winnerId,
+                    {winsCount: state.players[winnerId].winsCount + 1}),
+                gameState: newGameState,
+                gameField: newField,
+            }))
+            return;
+        }
+
+        const newColumnsInfo = getUpdatedColumnsInfo(columnsInfo, columnIndex, newField[nextFreeDotId - 1]);
+        const fieldWithNewHover = getHoveredGameField(newField, nextFreeDotId - 1, true);
+        set((state) => ({
+            currentPlayerIndex: (state.currentPlayerIndex + 1) % 2,
+            columnsInfo: newColumnsInfo,
+            gameField: fieldWithNewHover,
+        }))
+    },
+
+    // в идеале - setDotHover
+    handleMouseEnter: (columnIndex: number) => {
+        set((state) => ({
+            gameField: getHoveredGameField(
+                state.gameField,
+                state.columnsInfo[columnIndex].nextFreeDot.id,
+                true),
+        }))
+    },
+
+    handleMouseLeave: (columnIndex: number) => {
+        set((state) => ({
+            gameField: getHoveredGameField(
+                state.gameField,
+                state.columnsInfo[columnIndex].nextFreeDot.id,
+                false),
+        }))
+    }
+}})
