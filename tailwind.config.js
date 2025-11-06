@@ -24,6 +24,14 @@ module.exports = {
 
             'hollow-shadow-red',
             'hollow-shadow-blue',
+
+            {
+                pattern: /bg-ctp-(rosewater|flamingo|pink|mauve|red|maroon|peach|yellow|green|teal|saphhire|sky|lavender|blue|subtext0|overlay0)/,
+            },
+            {
+                pattern: /md:bg-ctp-(rosewater|flamingo|pink|mauve|red|maroon|peach|yellow|green|teal|saphhire|sky|lavender|blue|subtext0|overlay0)/,
+            },
+            'md:opacity-50',
         ]
     },
 }

@@ -14,7 +14,9 @@ const GameFieldDot = ({dotId}: {dotId: number}) => {
     const currentPlayerColor = players[currentPlayerIndex].color;
     const isHoverShown = dot.isHovered && gameState == "IN_PROGRESS"
     return (
-        <div className={`flex items-center justify-center bg-ctp-${isHoverShown? currentPlayerColor + " opacity-50" : dot.color} rounded-full w-16 h-16`}>
+        <div className={`flex items-center justify-center bg-ctp-${isHoverShown? currentPlayerColor + " opacity-50" : dot.color} rounded-full 
+        w-8 h-8
+        md:w-16 md:h-16`}>
             {dot.id}
         </div>
     )

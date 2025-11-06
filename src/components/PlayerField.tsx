@@ -17,7 +17,7 @@ const PlayerField = ({playerIndex} : {playerIndex: number}) => {
     }
 
     return (
-        <div className='flex flex-col items-center gap-16'>
+        <div className='hidden md:flex flex-col items-center gap-16'>
             <input type='text'
                    placeholder='Игрок'
                    className='transition-all text-3xl duration-100 hover:bg-ctp-surface1 focus:bg-ctp-surface1 border-b-2 border-ctp-lavender opacity-50 max-w-64'
