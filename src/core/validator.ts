@@ -2,6 +2,7 @@ import {type Dot, GameState} from "../types.ts";
 
 export const validate = (field: Record<number, Dot>, lastDot: Dot | undefined): GameState => {
     if (!field || !lastDot) return GameState.IN_PROGRESS;
+    // начало координат в левом нижнем углу
     const x = Math.floor(lastDot.id / 6);
     const y = 6 - (lastDot.id + x + 1) % 7;
 
@@ -40,12 +41,9 @@ export const validate = (field: Record<number, Dot>, lastDot: Dot | undefined): 
 
     // проверка по диагонали (справа налево)
     const [secondaryDiagonalLowerLength, secondaryDiagonalUpperLength] = [Math.min(6 - x, y), Math.min(x + 1, 6 - y)];
-    console.log(x)
-    console.log(secondaryDiagonalLowerLength, secondaryDiagonalUpperLength);
     const secondaryDiagonalLength = secondaryDiagonalUpperLength + secondaryDiagonalLowerLength;
     const secondaryDiagonal = Array.from({ length: secondaryDiagonalLength }, (_, index) =>
         field[lastDot.id - (7 * (index - secondaryDiagonalLowerLength))]);
-    console.log(secondaryDiagonal)
     const secondaryDiagonalResult = checkLine(secondaryDiagonal, lastDot);
     if (secondaryDiagonalResult != GameState.IN_PROGRESS) return secondaryDiagonalResult;
 

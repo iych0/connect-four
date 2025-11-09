@@ -15,7 +15,8 @@
     "eslint-plugin-react-x": "^2.2.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "tailwindcss": "^4.1.16"
+    "tailwindcss": "^4.1.16",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@catppuccin/tailwindcss": "^1.0.0",
