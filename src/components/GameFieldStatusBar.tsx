@@ -29,14 +29,15 @@ const GameFieldStatusBar = () => {
                  onClick={handleClick}
                  className={`absolute inset-0 flex flex-col justify-center items-center animate-slide-up select-none
                  ${gameState !== "IN_PROGRESS" ? "cursor-pointer" : ''}`}>
-                <div className=''>
-                    <span className="mr-2">
-                      {gameState !== "IN_PROGRESS" ? "Побеждает" : "Сейчас ходит"}
+                {gameState === "DRAW"
+                    ? <div>Ничья</div>
+                    : <div>
+                        <span className="mr-2">{gameState !== "IN_PROGRESS" ? "Побеждает" : "Сейчас ходит"}
                     </span>
-                    <span className={`text-ctp-${player.color}`}>
+                        <span className={`text-ctp-${player.color}`}>
                         {player.name || player.defaultName}
                     </span>
-                </div>
+                    </div>}
                 {gameState !== "IN_PROGRESS" ?
                     <div className='text-lg'>Кликните сюда, чтобы начать сначала</div>
                     : null}
