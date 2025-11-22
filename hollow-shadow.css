@@ -6,4 +6,8 @@
     .hollow-shadow-blue {
         box-shadow: 0 0 30px 10px var(--catppuccin-color-blue);
     }
+
+    .hollow-shadow-lavender {
+        box-shadow: 0 0 15px 5px var(--catppuccin-color-lavender);
+    }
 }
