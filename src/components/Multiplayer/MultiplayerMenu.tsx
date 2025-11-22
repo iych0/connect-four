@@ -1,6 +1,5 @@
 import {useAppStore} from "../../store/appStore.ts";
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router";
 import {useMultiplayerStore} from "../../store/multiplayerStore.ts";
 
 const MultiplayerMenu = () => {
