@@ -1,9 +1,14 @@
 import React, {useEffect, useState} from "react";
+import { useNavigate } from "react-router";
+import {useMultiplayerStore} from "../../store/multiplayerStore.ts";
 
 const MenuMultiplayer = () => {
+    const connect = useMultiplayerStore(state => state.connect);
+
     const [roomId, setRoomId] = useState('');
     const [isCopyMsgShown, setIsCopyMsgShown] = useState(false);
     const [inviteRoomId, setInviteRoomId] = useState('');
+    const navigate = useNavigate();
 
     const handleCopy = () => {
         if (!roomId) return;
@@ -14,6 +19,16 @@ const MenuMultiplayer = () => {
             setIsCopyMsgShown(false);
         }, 2000);
     };
+
+    const handleCreateRoom = () => {
+        navigate('/room/' + roomId);
+        connect(roomId);
+    }
+
+    const handleJoinRoom = () => {
+        navigate('/room/' + roomId);
+        connect(roomId);
+    }
 
     const handleRoomIdInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInviteRoomId(e.currentTarget.value);
@@ -42,7 +57,8 @@ const MenuMultiplayer = () => {
                         Код скопирован
                     </span>
                 </div>
-                <button className='bg-ctp-surface1 border-2 border-ctp-lavender rounded-xl px-6 py-2 hover:bg-ctp-surface0'>
+                <button className='bg-ctp-surface1 border-2 border-ctp-lavender rounded-xl px-6 py-2 hover:bg-ctp-surface0'
+                        onClick={handleCreateRoom}>
                     Создать лобби
                 </button>
             </div>
@@ -57,7 +73,8 @@ const MenuMultiplayer = () => {
                        border-b-2 border-ctp-lavender opacity-50 max-w-96 w-full'/>
 
                 <button className={`bg-ctp-surface1 border-2 border-ctp-lavender rounded-xl px-6 py-2 transform duration-200
-                                    ${inviteRoomId === "" ? "opacity-50" : "opacity-100 hover:bg-ctp-surface0"}`}>
+                                    ${inviteRoomId === "" ? "opacity-50" : "opacity-100 hover:bg-ctp-surface0"}`}
+                        onClick={handleJoinRoom}>
                     {inviteRoomId === "" ? "Сперва заполните ID" : "Присоединиться"}
                 </button>
             </div>

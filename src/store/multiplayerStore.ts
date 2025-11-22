@@ -9,6 +9,7 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
     roomId: null,
     isConnected: false,
     isClientTurn: false,
+    isOpponentConnected: false,
 
     connect(roomId: string) {
         if (socket && get().roomId === roomId) return;
@@ -42,8 +43,10 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
 
             switch (msg.type) {
                 case "PLAYER_JOINED": {
-                    // todo: handle join
-                    console.log("Player joined");
+                    console.log('Opponent joined room');
+                    set(() => ({
+                        isOpponentConnected: true,
+                    }))
                     break;
                 }
 
