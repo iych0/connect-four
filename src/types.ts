@@ -16,32 +16,56 @@ export type Dot = {
 
 export type ColumnInfo = {
     id: number;
-    nextFreeDot: Dot,
+    nextFreeDot: Dot;
     nextFreeDotColumIndex: number;
+}
+
+// todo: hoveredColumn to handle hover?
+type WsPayload = {
+    playerId?: string;
+    roomId?: string;
+    columnIndex?: number;
+}
+
+export type WsMessage = {
+    type: "PLAYER_JOINED" | "OPPONENT_MOVE" | "PLAYER_LEFT";
+    payload: WsPayload;
 }
 
 // interfaces
 export interface IGameStore {
     gameSeed: number;
-    players: Record<number, Player>,
-    currentPlayerIndex: number,
+    players: Record<number, Player>;
+    currentPlayerIndex: number;
 
-    gameField: Record<number, Dot>,
-    gameState: GameState,
-    fieldHeight: number,
-    fieldWidth: number,
-    columnsInfo: Record<number, ColumnInfo>,
+    gameField: Record<number, Dot>;
+    gameState: GameState;
+    fieldHeight: number;
+    fieldWidth: number;
+    columnsInfo: Record<number, ColumnInfo>;
 
-    changePlayer(): void,
-    updateGameField(id: number): void,
-    updatePlayer(id: number, delta: Partial<Player>): void,
-    updateGameState(status: GameState): void,
+    changePlayer(): void;
+    updateGameField(id: number): void
+    updatePlayer(id: number, delta: Partial<Player>): void;
+    updateGameState(status: GameState): void;
 
-    restartGame(): void
+    restartGame(): void;
 
-    handlePlayerAction(columnIndex: number): void,
-    handleMouseEnter(columnIndex: number): void,
-    handleMouseLeave(columnIndex: number): void
+    handlePlayerAction(columnIndex: number): void;
+    handleMouseEnter(columnIndex: number): void;
+    handleMouseLeave(columnIndex: number): void;
+}
+
+export interface IMultiplayerStore {
+    serverUrl: string;
+
+    roomId: string | null;
+    isConnected: boolean;
+    isClientTurn: boolean;
+
+    connect(roomId: string): void;
+    disconnect(): void;
+    makeMove(columnIndex: number): void;
 }
 
 // enums
