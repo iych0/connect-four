@@ -68,6 +68,13 @@ export interface IMultiplayerStore {
     makeMove(columnIndex: number): void;
 }
 
+export interface IAppStore {
+    isMenuShown: boolean;
+
+    showMenu(): void;
+    hideMenu(): void;
+}
+
 // enums
 export const GameState = {
     IN_PROGRESS: "IN_PROGRESS",
