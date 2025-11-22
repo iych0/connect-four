@@ -1,7 +1,7 @@
 import GameFieldColumn from "./GameFieldColumn.tsx";
 import PlayerField from "./PlayerField.tsx";
 import GameFieldStatusBar from "./GameFieldStatusBar.tsx";
-import {useGameStore} from "../store/gameStore.ts";
+import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
 
 const GameField = () => {

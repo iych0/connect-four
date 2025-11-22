@@ -1,4 +1,4 @@
-import {useGameStore} from "../store/gameStore.ts";
+import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
 import * as React from "react";
 

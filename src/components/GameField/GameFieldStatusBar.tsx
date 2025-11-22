@@ -1,5 +1,5 @@
 import {useMemo} from "react";
-import {useGameStore} from "../store/gameStore.ts";
+import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
 
 const GameFieldStatusBar = () => {

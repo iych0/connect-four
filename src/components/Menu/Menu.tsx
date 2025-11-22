@@ -1,4 +1,4 @@
-import {useAppStore} from "../store/appStore.ts";
+import {useAppStore} from "../../store/appStore.ts";
 import React, {useEffect, useState} from "react";
 
 const Menu = () => {

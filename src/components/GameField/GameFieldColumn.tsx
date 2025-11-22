@@ -1,5 +1,5 @@
 import GameFieldDot from "./GameFieldDot.tsx";
-import {useGameStore} from "../store/gameStore.ts";
+import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
 import {useCallback, useMemo} from "react";
 import * as React from "react";

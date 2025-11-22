@@ -1,8 +1,8 @@
-import GameField from "./components/GameField.tsx";
+import GameField from "./components/GameField/GameField.tsx";
 import {useEffect, useEffectEvent} from "react";
 import Header from "./components/Header.tsx";
 import "../hollow-shadow.css"
-import Menu from "./components/Menu.tsx";
+import Menu from "./components/Menu/Menu.tsx";
 
 function App() {
     // new fancy hooks
