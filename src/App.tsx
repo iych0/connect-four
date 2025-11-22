@@ -1,8 +1,6 @@
-import GameField from "./components/GameField/GameField.tsx";
+import { Outlet } from 'react-router';
 import {useEffect, useEffectEvent} from "react";
-import Header from "./components/Header.tsx";
 import "../hollow-shadow.css"
-import Menu from "./components/Menu/Menu.tsx";
 
 function App() {
     // new fancy hooks
@@ -21,14 +19,7 @@ function App() {
 
   return (
       <div className='flex flex-col w-full h-full items-center justify-around bg-ctp-base text-ctp-text'>
-          <Header />
-          <Menu />
-
-          {/*Game window*/}
-          <GameField />
-
-          {/*Potentially a great footer*/}
-          <></>
+          <Outlet />
       </div>
   )
 }
