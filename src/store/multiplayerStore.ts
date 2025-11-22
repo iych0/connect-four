@@ -5,13 +5,13 @@ import {useGameStore} from "./gameStore.ts";
 let socket: WebSocket | null = null;
 
 export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
-    serverUrl: 'ws://localhost:3000',
+    serverUrl: 'wss://iycho.online/ws/',
     roomId: null,
     isConnected: false,
     isClientTurn: false,
     isOpponentConnected: false,
 
-    connect(roomId: string) {
+    connect(roomId: string, isHost: boolean) {
         if (socket && get().roomId === roomId) return;
 
         // разрыв старого соединения, если disconnect() не отработал штатно
@@ -24,13 +24,14 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
             console.log('Connected to ' + get().serverUrl);
             set(() => ({
                 isConnected: true,
+                isClientTurn: isHost,
                 roomId: roomId,
             }))
             ws.send(JSON.stringify({type: "JOIN_ROOM", payload: { roomId: roomId }}))
         }
 
         ws.onclose = () => {
-            console.log('Connection closed');
+            console.log('Connection closed (onclose event)');
             set(() => ({
                 isConnected: false,
                 roomId: null,
@@ -56,7 +57,7 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
                         console.log("unexpected payload on OPPONENT_MOVE");
                         return;
                     }
-
+                    console.log('Processing opponent move');
                     useGameStore.getState().handlePlayerAction(msg.payload.columnIndex)
                     set(() => ({
                         isClientTurn: true,
@@ -65,7 +66,6 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
                 }
 
                 case "PLAYER_LEFT": {
-                    // todo: handle left
                     console.log("Player left");
                     break;
                 }
@@ -74,6 +74,7 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
     },
 
     disconnect() {
+        const wasConnectionActive = !!socket;
         if (socket) socket.close();
         socket = null;
         set(() => ({
@@ -81,6 +82,7 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
             roomId: null,
             isClientTurn: false,
         }))
+        console.log(`Disconnected manually. ${wasConnectionActive? "Connection was establised" : "Connection was not established"}`);
     },
 
     makeMove(columnIndex: number) {

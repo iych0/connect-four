@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router';
 import {useEffect, useEffectEvent} from "react";
 import "../hollow-shadow.css"
+import {useMultiplayerStore} from "./store/multiplayerStore.ts";
 
 function App() {
     // new fancy hooks
+    const disconnect = useMultiplayerStore(state => state.disconnect);
     const handleBeforeUnload = useEffectEvent((event: BeforeUnloadEvent) => {
         event.preventDefault();
         return '';
@@ -14,6 +16,7 @@ function App() {
 
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
+            disconnect();
         };
     }, []);
 

@@ -22,12 +22,12 @@ const MenuMultiplayer = () => {
 
     const handleCreateRoom = () => {
         navigate('/room/' + roomId);
-        connect(roomId);
+        connect(roomId, true);
     }
 
     const handleJoinRoom = () => {
-        navigate('/room/' + roomId);
-        connect(roomId);
+        navigate('/room/' + inviteRoomId);
+        connect(inviteRoomId, false);
     }
 
     const handleRoomIdInput = (e: React.ChangeEvent<HTMLInputElement>) => {

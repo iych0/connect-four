@@ -64,7 +64,7 @@ export interface IMultiplayerStore {
     isClientTurn: boolean;
     isOpponentConnected: boolean;
 
-    connect(roomId: string): void;
+    connect(roomId: string, isHost: boolean): void;
     disconnect(): void;
     makeMove(columnIndex: number): void;
 }

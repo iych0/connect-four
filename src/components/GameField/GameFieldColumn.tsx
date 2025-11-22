@@ -3,6 +3,7 @@ import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
 import {useCallback, useMemo} from "react";
 import * as React from "react";
+import {useMultiplayerStore} from "../../store/multiplayerStore.ts";
 
 const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
     const { handleMouseEnter, handleMouseLeave, handlePlayerAction, gameState } = useGameStore(
@@ -14,6 +15,10 @@ const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
         }))
     );
 
+    // да, не очень уж и сепарированная логика...
+    const sendMove = useMultiplayerStore(state => state.makeMove)
+    const isConnected = useMultiplayerStore(state => state.isConnected)
+
     const onEnter = useCallback(() => {
         handleMouseEnter(columnIndex);
     }, [handleMouseEnter, columnIndex]);
@@ -23,8 +28,11 @@ const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
     }, [handleMouseLeave, columnIndex]);
 
     const onClick = useCallback(() => {
+        if (isConnected) {
+            sendMove(columnIndex);
+        }
         handlePlayerAction(columnIndex);
-    }, [handlePlayerAction, columnIndex]);
+    }, [isConnected, handlePlayerAction, columnIndex, sendMove]);
 
     const numbers = useMemo(() => Array.from({length: 6}, (_ , num) => num + columnIndex * 6), [columnIndex]);
     return (
