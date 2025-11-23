@@ -86,7 +86,7 @@ export const useGameStore = create<IGameStore>()((set, get) => {
         const owner = players[currentPlayerIndex];
         let newField = getOwnedGameField(gameField, nextFreeDotId, owner);
         const newGameState = validate(newField, newField[nextFreeDotId])
-        console.log(newGameState)
+
         if (newGameState == 'FIRST_PLAYER_WIN' || newGameState == 'SECOND_PLAYER_WIN') {
             const winnerId = newGameState == "FIRST_PLAYER_WIN" ? 0 : 1;
             set((state) => ({
@@ -115,7 +115,6 @@ export const useGameStore = create<IGameStore>()((set, get) => {
         }))
     },
 
-    // в идеале - setDotHover
     handleMouseEnter: (columnIndex: number) => {
         set((state) => ({
             gameField: getHoveredGameField(

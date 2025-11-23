@@ -15,9 +15,9 @@ const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
         }))
     );
 
-    // да, не очень уж и сепарированная логика...
-    const sendMove = useMultiplayerStore(state => state.makeMove)
-    const isConnected = useMultiplayerStore(state => state.isConnected)
+    // вынужденный костыль
+    const isConnected = useMultiplayerStore(state => state.isConnected);
+    const makeMove = useMultiplayerStore(state => state.makeMove);
 
     const onEnter = useCallback(() => {
         handleMouseEnter(columnIndex);
@@ -28,11 +28,15 @@ const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
     }, [handleMouseLeave, columnIndex]);
 
     const onClick = useCallback(() => {
+        // если есть подключение - значит активен мультиплеер
+        // обработка хода на клиенте делегируется multiplayerStore
+        // если подключения нет - обработка хода выполняется "чисто", без лишних оберток
         if (isConnected) {
-            sendMove(columnIndex);
+            makeMove(columnIndex);
+        } else {
+            handlePlayerAction(columnIndex);
         }
-        handlePlayerAction(columnIndex);
-    }, [isConnected, handlePlayerAction, columnIndex, sendMove]);
+    }, [isConnected, handlePlayerAction, columnIndex, makeMove]);
 
     const numbers = useMemo(() => Array.from({length: 6}, (_ , num) => num + columnIndex * 6), [columnIndex]);
     return (

@@ -1,4 +1,5 @@
 // le types
+
 export type Player = {
     id: number;
     defaultName: string;
@@ -28,7 +29,12 @@ type WsPayload = {
 }
 
 export type WsMessage = {
-    type: "PLAYER_JOINED" | "OPPONENT_MOVE" | "PLAYER_LEFT";
+    type: "PLAYER_JOINED"
+        | "OPPONENT_MOVE"
+        | "PLAYER_LEFT"
+        | "RESTART_REQUESTED"
+        | "RESTART_ACCEPTED"
+        | "RESTART_DENIED";
     payload: WsPayload;
 }
 
@@ -60,13 +66,18 @@ export interface IMultiplayerStore {
     serverUrl: string;
 
     roomId: string | null;
+
+    isPaused: boolean;
     isConnected: boolean;
     isClientTurn: boolean;
     isOpponentConnected: boolean;
+    isRestartRequested: boolean;
 
     connect(roomId: string, isHost: boolean): void;
     disconnect(): void;
     makeMove(columnIndex: number): void;
+    requestRestart(): void;
+    answerOnRestartRequest(isAccepted: boolean): void;
 }
 
 export interface IAppStore {
