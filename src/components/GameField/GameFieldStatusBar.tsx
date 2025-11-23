@@ -1,6 +1,7 @@
 import {useMemo} from "react";
 import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
+import {useMultiplayerStore} from "../../store/multiplayerStore.ts";
 
 const GameFieldStatusBar = () => {
     const { players, currentPlayerIndex, gameState, restartGame } = useGameStore(
@@ -12,6 +13,9 @@ const GameFieldStatusBar = () => {
         }))
     );
 
+    const isConnected = useMultiplayerStore(state => state.isConnected);
+    const requestRestart = useMultiplayerStore(state => state.requestRestart);
+
     const player = players[currentPlayerIndex];
     const animationKey = useMemo(
         () => (gameState === "IN_PROGRESS" ? "progress" : "finished"),
@@ -20,7 +24,12 @@ const GameFieldStatusBar = () => {
 
     const handleClick = () => {
         if (gameState === "IN_PROGRESS") return;
-        restartGame();
+
+        if (isConnected) {
+            requestRestart();
+        } else {
+            restartGame();
+        }
     }
 
     return (
@@ -40,10 +49,23 @@ const GameFieldStatusBar = () => {
                     </div>}
                 {gameState !== "IN_PROGRESS" ?
                     <div className='text-lg'>Кликните сюда, чтобы начать сначала</div>
-                    : null}
+                    : isConnected ?
+                        <MultiplayerTurnStatus /> :
+                        null
+                }
             </div>
         </div>
     );
 };
+
+export const MultiplayerTurnStatus = () => {
+    const isClientTurn = useMultiplayerStore(state => state.isClientTurn);
+
+    return (
+        <span className='text-lg text-ctp-text/70'>
+            {isClientTurn ? "Ваша очередь ходить" : "Ждем ход оппонента"}
+        </span>
+    )
+}
 
 export default GameFieldStatusBar;

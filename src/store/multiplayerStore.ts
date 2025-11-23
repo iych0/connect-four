@@ -119,7 +119,10 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
 
     disconnect() {
         const wasConnectionActive = !!socket;
-        if (socket) socket.close();
+        if (socket) {
+            console.log('Socket closing...');
+            socket.close();
+        }
         socket = null;
         set(() => ({
             isConnected: false,
@@ -171,6 +174,7 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
             isPaused: true,
         }))
 
+        console.log("Restart requested.")
         socket.send(JSON.stringify({
             type: "REQUEST_RESTART"
         }))
@@ -178,8 +182,20 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
 
     answerOnRestartRequest(isAccepted: boolean) {
         // соединение живет?
-        if (!socket || socket.readyState !== WebSocket.OPEN) return;
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+            // если соединение мертво, попап не пропадет
+            set(() => ({
+                isRestartRequested: false,
+                isPaused: false,
+            }))
+            return;
+        }
         const answerType = isAccepted ? "ACCEPT_RESTART_REQUEST" : "REJECT_RESTART_REQUEST";
+
+        // логично
+        if (isAccepted) {
+            useGameStore.getState().restartGame();
+        }
 
         set(() => ({
             isPaused: false,

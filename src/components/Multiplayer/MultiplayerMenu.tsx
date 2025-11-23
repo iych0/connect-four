@@ -7,6 +7,7 @@ const MultiplayerMenu = () => {
     const isMenuShown = useAppStore(state => state.isMenuShown);
     const hideMenu = useAppStore(state => state.hideMenu);
     const disconnect = useMultiplayerStore(state => state.disconnect);
+    const requestRestart = useMultiplayerStore(state => state.requestRestart);
     const navigate = useNavigate();
 
     const [isClosing, setIsClosing] = useState(false);
@@ -24,6 +25,10 @@ const MultiplayerMenu = () => {
         navigate('/')
     }
 
+    const handleRestartRequest = () => {
+        requestRestart();
+    }
+
     useEffect(() => {
         return () => setIsClosing(false);
     }, [isMenuShown]);
@@ -38,9 +43,15 @@ const MultiplayerMenu = () => {
                 <MultiplayerMenuRoom />
 
                 <button className='bg-ctp-surface1 border-2 border-ctp-lavender rounded-xl px-6 py-2 hover:bg-ctp-surface0'
+                        onClick={handleRestartRequest}>
+                    Запросить перезапуск
+                </button>
+
+                <button className='bg-ctp-surface1 border-2 border-ctp-lavender rounded-xl px-6 py-2 hover:bg-ctp-surface0'
                         onClick={returnToLocalMode}>
                     Вернуться в локальный режим
                 </button>
+
             </div>
         </div>
     );
