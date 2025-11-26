@@ -14,6 +14,7 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
     isClientTurn: false,
     isOpponentConnected: false,
     isRestartRequested: false,
+    nextFirstPlayer: 1,
 
     connect(roomId: string, isHost: boolean) {
         if (socket && get().roomId === roomId) return;
@@ -34,7 +35,7 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
             }))
 
             // очистка поля
-            useGameStore.getState().restartGame();
+            useGameStore.getState().restartGame(0, true);
             ws.send(JSON.stringify({type: "JOIN_ROOM", payload: { roomId: roomId }}))
         }
 
@@ -101,7 +102,8 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
                     set(() => ({
                         isPaused: false,
                     }))
-                    useGameStore.getState().restartGame();
+                    useGameStore.getState().restartGame(get().nextFirstPlayer);
+                    set({nextFirstPlayer: (get().nextFirstPlayer + 1) % 2})
                     break;
                 }
 
@@ -194,7 +196,8 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
 
         // логично
         if (isAccepted) {
-            useGameStore.getState().restartGame();
+            useGameStore.getState().restartGame(get().nextFirstPlayer);
+            set({nextFirstPlayer: (get().nextFirstPlayer + 1) % 2})
         }
 
         set(() => ({

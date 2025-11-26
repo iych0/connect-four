@@ -23,7 +23,8 @@ const PlayerField = ({playerIndex} : {playerIndex: number}) => {
                    className='transition-all text-3xl duration-100 hover:bg-ctp-surface1 focus:bg-ctp-surface1 border-b-2 border-ctp-lavender opacity-50 max-w-64'
                    onChange={setName}/>
             <div className={`rounded-full bg-ctp-${fieldOwner.color} transition-shadow duration-200
-             ${fieldOwner.id == currentPlayerIndex? `hollow-shadow-${fieldOwner.color}` : ''} w-48 h-48`}></div>
+             ${fieldOwner.id == currentPlayerIndex? `hollow-shadow-${fieldOwner.color}` : ''} w-48 h-48`}>
+            </div>
         </div>
     )
 }

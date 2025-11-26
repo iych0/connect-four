@@ -51,8 +51,8 @@ export const useGameStore = create<IGameStore>()((set, get) => {
         set(() => ({
             gameState: newState,
         })),
-    restartGame: () => {
-        const { fieldWidth, fieldHeight } = get();
+    restartGame: (nextFirstPlayer?: number, clearStats?: boolean) => {
+        const { fieldWidth, fieldHeight, players } = get();
         const newGameField = getEmptyGameField(fieldHeight * fieldWidth);
         const columnsInfo = Array.from({ length: fieldWidth }, (_, i) => {
             const bottomIndex = (i + 1) * fieldHeight - 1;
@@ -63,11 +63,16 @@ export const useGameStore = create<IGameStore>()((set, get) => {
             };
         });
         set({
-            currentPlayerIndex: 0,
+            currentPlayerIndex: nextFirstPlayer ? nextFirstPlayer : 0,
             gameState: 'IN_PROGRESS',
             gameField: newGameField,
             gameSeed: Math.random(),
             columnsInfo: columnsInfo,
+            // wtf
+            players: clearStats ? {
+                0 : getUpdatedPlayers(players, 0, {winsCount: 0})[0],
+                1 : getUpdatedPlayers(players, 1, {winsCount: 0})[1],
+            } : players,
         })
     },
 

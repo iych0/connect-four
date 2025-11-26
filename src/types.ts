@@ -55,7 +55,7 @@ export interface IGameStore {
     updatePlayer(id: number, delta: Partial<Player>): void;
     updateGameState(status: GameState): void;
 
-    restartGame(): void;
+    restartGame(nextFirstPlayer?: number, clearStats?: boolean): void;
 
     handlePlayerAction(columnIndex: number): void;
     handleMouseEnter(columnIndex: number): void;
@@ -66,6 +66,7 @@ export interface IMultiplayerStore {
     serverUrl: string;
 
     roomId: string | null;
+    nextFirstPlayer: number;
 
     isPaused: boolean;
     isConnected: boolean;
