@@ -2,7 +2,6 @@ import GameFieldDot from "./GameFieldDot.tsx";
 import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
 import {useCallback, useMemo} from "react";
-import * as React from "react";
 import {useMultiplayerStore} from "../../store/multiplayerStore.ts";
 
 const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
@@ -57,4 +56,4 @@ const GameFieldColumn = ({columnIndex}: {columnIndex: number}) => {
     );
 };
 
-export default React.memo(GameFieldColumn);
+export default GameFieldColumn;

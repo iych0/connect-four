@@ -22,7 +22,7 @@ const MultiplayerMenu = () => {
 
     const returnToLocalMode = () => {
         disconnect();
-        navigate('/')
+        navigate('/connect-four/')
     }
 
     const handleRestartRequest = () => {

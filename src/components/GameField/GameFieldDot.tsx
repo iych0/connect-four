@@ -1,6 +1,5 @@
 import {useGameStore} from "../../store/gameStore.ts";
 import {useShallow} from "zustand/react/shallow";
-import * as React from "react";
 
 const GameFieldDot = ({dotId}: {dotId: number}) => {
     const dot = useGameStore((state) => state.gameField[dotId]);
@@ -14,7 +13,7 @@ const GameFieldDot = ({dotId}: {dotId: number}) => {
     const currentPlayerColor = players[currentPlayerIndex].color;
     const isHoverShown = dot.isHovered && gameState == "IN_PROGRESS"
     return (
-        <div className={`flex items-center justify-center bg-ctp-${isHoverShown? currentPlayerColor + " opacity-50" : dot.color} rounded-full 
+        <div className={`flex items-center justify-center bg-ctp-${isHoverShown? currentPlayerColor + " opacity-40" : dot.color} rounded-full 
         w-10 h-10
         md:w-16 md:h-16`}>
             {/*{dot.id}*/}
@@ -22,4 +21,4 @@ const GameFieldDot = ({dotId}: {dotId: number}) => {
     )
 }
 
-export default React.memo(GameFieldDot);
+export default GameFieldDot;

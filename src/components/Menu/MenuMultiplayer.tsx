@@ -21,12 +21,12 @@ const MenuMultiplayer = () => {
     };
 
     const handleCreateRoom = () => {
-        navigate('/room/' + roomId);
+        navigate('room/' + roomId);
         connect(roomId, true);
     }
 
     const handleJoinRoom = () => {
-        navigate('/room/' + inviteRoomId);
+        navigate('room/' + inviteRoomId);
         connect(inviteRoomId, false);
     }
 

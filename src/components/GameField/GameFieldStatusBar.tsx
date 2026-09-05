@@ -23,7 +23,7 @@ const GameFieldStatusBar = () => {
     );
 
     const handleClick = () => {
-        if (gameState === "IN_PROGRESS") return;
+        // if (gameState === "IN_PROGRESS") return;
 
         if (isConnected) {
             requestRestart();

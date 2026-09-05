@@ -67,7 +67,6 @@ export const useMultiplayerStore = create<IMultiplayerStore>((set, get) => ({
                 }
 
                 case "OPPONENT_MOVE": {
-                    // todo: deal with either bug or desync (i don't think it's possible, but nobody guarantees that)
                     if (typeof msg.payload.columnIndex != "number") {
                         console.log("unexpected payload on OPPONENT_MOVE");
                         return;

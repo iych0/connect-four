@@ -6,7 +6,8 @@ import svgr from 'vite-plugin-svgr'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
+    base: '/connect-four/',
+    plugins: [
       react(),
       tailwindcss(),
       svgr()
